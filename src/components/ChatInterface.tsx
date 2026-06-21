@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { sendChatMessage } from '../lib/api'
+import { trackEvent } from '../lib/analytics'
 import { saveSession } from '../lib/session-storage'
 import type { ChatMessage, FollowUpContext, IntakeData } from '../types/chat'
 import { MessageBubble } from './MessageBubble'
@@ -109,6 +110,7 @@ export function ChatInterface({
         setMessages([userMessage, createMessage('assistant', response.message)])
         if (response.todaysAction) setTodaysAction(response.todaysAction)
         if (response.isMock) onMockModeChange?.(true)
+        void trackEvent('chat_started', { followUp: Boolean(followUp) })
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Something went wrong')
         setHasStarted(false)
@@ -129,6 +131,7 @@ export function ChatInterface({
     setInput('')
     setIsLoading(true)
     setError(null)
+    void trackEvent('chat_message_sent')
 
     try {
       const [response] = await Promise.all([

@@ -1,5 +1,7 @@
+import { useEffect } from 'react'
 import { Link, Navigate, useParams } from 'react-router-dom'
 import { getBlogPost } from '../data/blog-posts'
+import { trackEvent } from '../lib/analytics'
 
 function formatDate(iso: string): string {
   return new Date(iso).toLocaleDateString('en-US', {
@@ -12,6 +14,10 @@ function formatDate(iso: string): string {
 export function BlogPostPage() {
   const { slug } = useParams<{ slug: string }>()
   const post = slug ? getBlogPost(slug) : undefined
+
+  useEffect(() => {
+    if (post) void trackEvent('blog_post_view', { slug: post.slug })
+  }, [post])
 
   if (!post) {
     return <Navigate to="/blog" replace />

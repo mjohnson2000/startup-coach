@@ -15,6 +15,9 @@ dist-ssr
 .env.*
 !.env.example
 
+# Analytics data (server-side only)
+data/
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

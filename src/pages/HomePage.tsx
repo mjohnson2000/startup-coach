@@ -7,6 +7,7 @@ import {
   loadSavedSession,
   recordReturnVisit,
 } from '../lib/session-storage'
+import { trackEvent } from '../lib/analytics'
 import type { FollowUpContext, FollowUpStatus, IntakeData, SavedSession } from '../types/chat'
 
 type HomeView = 'loading' | 'return' | 'intake' | 'chat'
@@ -73,6 +74,7 @@ export function HomePage({ onMockModeChange }: HomePageProps) {
     onMockModeChange?.(false)
     setSessionKey((key) => key + 1)
     setView('intake')
+    void trackEvent('new_session')
   }
 
   return (

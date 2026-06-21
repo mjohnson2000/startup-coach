@@ -1,4 +1,6 @@
+import { useEffect } from 'react'
 import type { FollowUpStatus, SavedSession } from '../types/chat'
+import { trackEvent } from '../lib/analytics'
 import { STARTER_NAME, StarterAvatar } from './StarterAvatar'
 import { formatActionAge } from '../lib/session-storage'
 
@@ -37,6 +39,10 @@ const STATUS_OPTIONS: Array<{
 export function ReturnVisit({ session, onContinue, onStartFresh }: ReturnVisitProps) {
   const actionAge = formatActionAge(session.lastActionAt)
 
+  useEffect(() => {
+    void trackEvent('return_visit_shown')
+  }, [])
+
   return (
     <section className="animate-fade-in mx-auto w-full max-w-lg px-4 py-8 sm:px-6 sm:py-12">
       <div className="rounded-2xl border border-white/[0.06] bg-navy-850/80 p-6 shadow-xl shadow-black/25 backdrop-blur-sm sm:p-8">
@@ -69,7 +75,10 @@ export function ReturnVisit({ session, onContinue, onStartFresh }: ReturnVisitPr
             <button
               key={status}
               type="button"
-              onClick={() => onContinue(status)}
+              onClick={() => {
+                void trackEvent('return_visit_answered', { status })
+                onContinue(status)
+              }}
               className={`flex w-full items-center justify-between rounded-2xl border border-white/[0.06] bg-navy-900/50 px-4 py-4 text-left transition ${hoverClass}`}
             >
               <span className="text-sm font-semibold text-slate-50">{label}</span>

@@ -3,11 +3,13 @@
 # Usage:
 #   export DOMAIN=bizstarteragent.com
 #   export OPENAI_API_KEY=sk-...
+#   export ADMIN_PASSWORD=your-secure-password
 #   bash deploy/vps-setup.sh
 set -euo pipefail
 
 DOMAIN="${DOMAIN:-}"
 OPENAI_API_KEY="${OPENAI_API_KEY:-}"
+ADMIN_PASSWORD="${ADMIN_PASSWORD:-}"
 APP_DIR="/var/www/startup-coach"
 REPO_URL="${REPO_URL:-https://github.com/mjohnson2000/startup-coach.git}"
 NODE_MAJOR="${NODE_MAJOR:-20}"
@@ -56,8 +58,10 @@ NODE_ENV=production
 PORT=3000
 HOST=127.0.0.1
 OPENAI_API_KEY=${OPENAI_API_KEY}
+ADMIN_PASSWORD=${ADMIN_PASSWORD}
 EOF
 chmod 600 "${APP_DIR}/.env"
+mkdir -p "${APP_DIR}/data"
 
 echo "==> Starting app with PM2"
 pm2 delete startup-coach 2>/dev/null || true

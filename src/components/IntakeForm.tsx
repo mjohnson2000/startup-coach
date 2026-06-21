@@ -1,4 +1,5 @@
 import type { IntakeData } from '../types/chat'
+import { trackEvent } from '../lib/analytics'
 import { STARTER_NAME, StarterAvatar } from './StarterAvatar'
 
 interface IntakeFormProps {
@@ -23,6 +24,7 @@ export function IntakeForm({ onSubmit }: IntakeFormProps) {
       blocker: String(formData.get('blocker') ?? '').trim(),
       timeline: String(formData.get('timeline') ?? TIMELINE_OPTIONS[0]),
     })
+    void trackEvent('intake_submitted')
   }
 
   return (
