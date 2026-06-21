@@ -325,7 +325,8 @@ export async function handleChat(
 
     const message = response.choices[0]?.message?.content ?? 'Something went wrong. Try again.'
     return { message, todaysAction: extractTodaysAction(message), isMock: false }
-  } catch {
+  } catch (error) {
+    console.error('OpenAI request failed, using mock response:', error)
     const message = getMockResponse(messages, intake)
     return { message, todaysAction: extractTodaysAction(message), isMock: true }
   }

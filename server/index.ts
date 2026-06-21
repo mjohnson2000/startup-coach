@@ -35,5 +35,7 @@ app.get('*', (_req, res) => {
 })
 
 app.listen(port, host, () => {
+  const hasKey = Boolean(process.env.OPENAI_API_KEY?.trim())
   console.log(`Startup Coach running on http://${host}:${port}`)
+  console.log(`OpenAI key loaded: ${hasKey ? 'yes' : 'no'}`)
 })
