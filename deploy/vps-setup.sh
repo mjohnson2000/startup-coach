@@ -66,8 +66,10 @@ source "${APP_DIR}/.env"
 set +a
 pm2 start deploy/ecosystem.config.cjs
 pm2 save
-pm2 startup systemd -u root --hp /root >/tmp/pm2-startup.txt
-bash /tmp/pm2-startup.txt || true
+STARTUP_CMD="$(pm2 startup systemd -u root --hp /root 2>/dev/null | grep -E '^(sudo )?env PATH' || true)"
+if [[ -n "$STARTUP_CMD" ]]; then
+  eval "$STARTUP_CMD"
+fi
 
 echo "==> Configuring nginx"
 sed "s/DOMAIN_PLACEHOLDER/${DOMAIN}/g" deploy/nginx-startup-coach.conf \
