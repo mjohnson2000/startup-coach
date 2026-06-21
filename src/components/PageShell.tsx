@@ -13,7 +13,7 @@ export function PageShell({ children, isMockMode }: PageShellProps) {
       <div className="pointer-events-none fixed inset-0 bg-[radial-gradient(ellipse_at_bottom_right,_var(--tw-gradient-stops))] from-amber-900/8 via-transparent to-transparent" />
       <div className="relative flex min-h-dvh flex-col">
         <Header isMockMode={isMockMode} />
-        {children}
+        <div className="flex min-h-0 flex-1 flex-col">{children}</div>
       </div>
     </div>
   )

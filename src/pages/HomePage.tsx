@@ -78,7 +78,13 @@ export function HomePage({ onMockModeChange }: HomePageProps) {
   }
 
   return (
-    <>
+    <div
+      className={
+        view === 'chat'
+          ? 'flex min-h-0 flex-1 flex-col overflow-hidden'
+          : 'flex-1'
+      }
+    >
       {view === 'loading' && null}
       {view === 'return' && savedSession && (
         <ReturnVisit
@@ -97,6 +103,6 @@ export function HomePage({ onMockModeChange }: HomePageProps) {
           onMockModeChange={onMockModeChange}
         />
       )}
-    </>
+    </div>
   )
 }

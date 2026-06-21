@@ -25,7 +25,7 @@ export function BlogPage() {
   }, [])
 
   return (
-    <main className="mx-auto w-full max-w-3xl flex-1 px-4 py-8 sm:px-6 sm:py-12">
+    <main className="safe-x mx-auto w-full max-w-3xl flex-1 px-4 py-6 sm:px-6 sm:py-12">
       <Seo
         title="Blog — Ideas, starting, and getting unstuck"
         description="Short reads for young entrepreneurs with lots of ideas — how to pick one, stop researching, and take a real first step."

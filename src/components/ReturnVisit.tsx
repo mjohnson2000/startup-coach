@@ -44,15 +44,15 @@ export function ReturnVisit({ session, onContinue, onStartFresh }: ReturnVisitPr
   }, [])
 
   return (
-    <section className="animate-fade-in mx-auto w-full max-w-lg px-4 py-8 sm:px-6 sm:py-12">
-      <div className="rounded-2xl border border-white/[0.06] bg-navy-850/80 p-6 shadow-xl shadow-black/25 backdrop-blur-sm sm:p-8">
+    <section className="animate-fade-in safe-x mx-auto w-full max-w-lg px-4 py-6 sm:px-6 sm:py-12">
+      <div className="rounded-2xl border border-white/[0.06] bg-navy-850/80 p-5 shadow-xl shadow-black/25 backdrop-blur-sm sm:p-8">
         <div className="mb-6 flex items-start gap-3">
           <StarterAvatar size="lg" className="mt-0.5" />
           <div>
             <p className="mb-1 text-sm font-medium uppercase tracking-wider text-slate-400">
               Welcome back
             </p>
-            <h2 className="mb-2 text-2xl font-bold text-slate-50">
+            <h2 className="mb-2 text-xl font-bold text-slate-50 sm:text-2xl">
               Did you do your action?
             </h2>
             <p className="text-sm leading-relaxed text-slate-400">
@@ -79,7 +79,7 @@ export function ReturnVisit({ session, onContinue, onStartFresh }: ReturnVisitPr
                 void trackEvent('return_visit_answered', { status })
                 onContinue(status)
               }}
-              className={`flex w-full items-center justify-between rounded-2xl border border-white/[0.06] bg-navy-900/50 px-4 py-4 text-left transition ${hoverClass}`}
+              className={`touch-target flex w-full flex-col gap-1 rounded-2xl border border-white/[0.06] bg-navy-900/50 px-4 py-4 text-left transition sm:flex-row sm:items-center sm:justify-between ${hoverClass}`}
             >
               <span className="text-sm font-semibold text-slate-50">{label}</span>
               <span className="text-xs text-slate-500">{hint}</span>

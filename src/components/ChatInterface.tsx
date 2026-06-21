@@ -178,14 +178,14 @@ export function ChatInterface({
 
   return (
     <div className="flex min-h-0 flex-1 flex-col">
-      <div className="flex items-center justify-between border-b border-white/[0.04] px-4 py-2 sm:px-6">
-        <p className="truncate text-xs text-slate-500">
+      <div className="safe-x flex shrink-0 items-center justify-between gap-2 border-b border-white/[0.04] px-4 py-2 sm:px-6">
+        <p className="min-w-0 truncate text-xs text-slate-500">
           {STARTER_NAME}: <span className="text-slate-300">{intake.businessIdea}</span>
         </p>
         <button
           type="button"
           onClick={onReset}
-          className="shrink-0 text-xs text-slate-500 transition hover:text-slate-300"
+          className="touch-target shrink-0 rounded-lg px-2 text-xs text-slate-500 transition hover:text-slate-300"
         >
           New session
         </button>
@@ -197,7 +197,7 @@ export function ChatInterface({
         <FeedbackForm context="chat" todaysAction={todaysAction ?? undefined} />
       )}
 
-      <div className="flex-1 overflow-y-auto px-4 py-4 sm:px-6">
+      <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-4 py-4 sm:px-6">
         <div className="mx-auto flex max-w-3xl flex-col gap-5">
           {messages.map((message) =>
             message.hidden ? null : <MessageBubble key={message.id} message={message} />,
@@ -229,16 +229,16 @@ export function ChatInterface({
 
       <form
         onSubmit={handleSubmit}
-        className="border-t border-white/[0.05] bg-navy-950/60 px-4 py-4 backdrop-blur-md sm:px-6"
+        className="safe-bottom safe-x shrink-0 border-t border-white/[0.05] bg-navy-950/80 px-4 py-3 backdrop-blur-md sm:px-6 sm:py-4"
       >
         {showSuggestedReplies && (
-          <div className="mx-auto mb-3 flex max-w-3xl flex-wrap justify-center gap-2">
+          <div className="scrollbar-hidden mx-auto mb-3 flex max-w-3xl gap-2 overflow-x-auto pb-1 sm:flex-wrap sm:justify-center sm:overflow-visible">
             {suggestedReplies.map((reply) => (
               <button
                 key={reply}
                 type="button"
                 onClick={() => handleSuggestedReply(reply)}
-                className="rounded-full border border-white/[0.06] bg-navy-850/70 px-3 py-1.5 text-xs text-slate-300 transition hover:border-teal-500/25 hover:bg-navy-800/80 hover:text-slate-50"
+                className="touch-target shrink-0 rounded-full border border-white/[0.06] bg-navy-850/70 px-3 py-2 text-left text-xs leading-snug text-slate-300 transition hover:border-teal-500/25 hover:bg-navy-800/80 hover:text-slate-50 sm:py-1.5 sm:text-center"
               >
                 {reply}
               </button>
@@ -255,17 +255,17 @@ export function ChatInterface({
             placeholder={chatPlaceholder}
             rows={1}
             disabled={isLoading}
-            className="max-h-32 min-h-[44px] flex-1 resize-none rounded-xl border border-white/[0.06] bg-navy-850/80 px-4 py-3 text-sm text-slate-50 placeholder:text-slate-500 outline-none transition focus:border-teal-500/40 focus:ring-2 focus:ring-teal-500/15 disabled:opacity-50"
+            className="max-h-32 min-h-[44px] flex-1 resize-none rounded-xl border border-white/[0.06] bg-navy-850/80 px-4 py-3 text-base text-slate-50 placeholder:text-slate-500 outline-none transition focus:border-teal-500/40 focus:ring-2 focus:ring-teal-500/15 disabled:opacity-50 sm:text-sm"
           />
           <button
             type="submit"
             disabled={isLoading || !input.trim()}
-            className="shrink-0 rounded-xl bg-gradient-to-r from-teal-500 to-emerald-600 px-4 py-3 text-sm font-semibold text-navy-950 transition hover:from-teal-400 hover:to-emerald-500 disabled:cursor-not-allowed disabled:opacity-40"
+            className="touch-target shrink-0 rounded-xl bg-gradient-to-r from-teal-500 to-emerald-600 px-4 py-3 text-sm font-semibold text-navy-950 transition hover:from-teal-400 hover:to-emerald-500 disabled:cursor-not-allowed disabled:opacity-40"
           >
             Send
           </button>
         </div>
-        <p className="mx-auto mt-2 max-w-3xl text-center text-[11px] text-slate-600">
+        <p className="mx-auto mt-2 hidden max-w-3xl text-center text-[11px] text-slate-600 sm:block">
           Enter to send · Shift+Enter for new line
         </p>
       </form>

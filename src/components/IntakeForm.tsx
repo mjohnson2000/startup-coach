@@ -42,15 +42,15 @@ export function IntakeForm({ onSubmit }: IntakeFormProps) {
   }
 
   return (
-    <section className="animate-fade-in mx-auto w-full max-w-lg px-4 py-8 sm:px-6 sm:py-12">
-      <div className="rounded-2xl border border-white/[0.06] bg-navy-850/80 p-6 shadow-xl shadow-black/25 backdrop-blur-sm sm:p-8">
+    <section className="animate-fade-in safe-x mx-auto w-full max-w-lg px-4 py-6 sm:px-6 sm:py-12">
+      <div className="rounded-2xl border border-white/[0.06] bg-navy-850/80 p-5 shadow-xl shadow-black/25 backdrop-blur-sm sm:p-8">
         <div className="mb-6 flex items-start gap-3">
           <StarterAvatar size="lg" className="mt-0.5" />
           <div>
             <p className="mb-1 text-sm font-medium uppercase tracking-wider text-slate-400">
               Young entrepreneur, lots of ideas?
             </p>
-            <h2 className="mb-2 text-2xl font-bold text-slate-50">
+            <h2 className="mb-2 text-xl font-bold text-slate-50 sm:text-2xl">
               Pick one and start
             </h2>
             <p className="text-sm leading-relaxed text-slate-400">
@@ -86,7 +86,7 @@ export function IntakeForm({ onSubmit }: IntakeFormProps) {
                   key={option.type}
                   type="button"
                   onClick={() => selectBlocker(option.type, option.text)}
-                  className={`rounded-full border px-3 py-1.5 text-xs transition ${
+                  className={`touch-target rounded-full border px-3 py-2 text-xs transition ${
                     blockerType === option.type
                       ? 'border-teal-500/40 bg-teal-500/15 text-teal-200'
                       : 'border-white/[0.06] bg-navy-900/50 text-slate-300 hover:border-teal-500/25 hover:text-slate-50'
@@ -130,7 +130,7 @@ export function IntakeForm({ onSubmit }: IntakeFormProps) {
           <button
             type="submit"
             disabled={!blocker.trim()}
-            className="w-full rounded-xl bg-gradient-to-r from-teal-500 to-emerald-600 px-4 py-3.5 text-sm font-semibold text-navy-950 shadow-lg shadow-teal-500/25 transition hover:from-teal-400 hover:to-emerald-500 active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-50"
+            className="touch-target w-full rounded-xl bg-gradient-to-r from-teal-500 to-emerald-600 px-4 py-3.5 text-sm font-semibold text-navy-950 shadow-lg shadow-teal-500/25 transition hover:from-teal-400 hover:to-emerald-500 active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-50"
           >
             Help me start
           </button>

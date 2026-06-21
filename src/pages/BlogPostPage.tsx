@@ -35,7 +35,7 @@ export function BlogPostPage() {
 
   if (post === undefined && !error) {
     return (
-      <main className="mx-auto w-full max-w-3xl flex-1 px-4 py-12 sm:px-6">
+      <main className="safe-x mx-auto w-full max-w-3xl flex-1 px-4 py-8 sm:px-6">
         <p className="text-center text-sm text-slate-500">Loading article…</p>
       </main>
     )
@@ -49,7 +49,7 @@ export function BlogPostPage() {
   const seoDescription = post.seo?.metaDescription || post.excerpt
 
   return (
-    <main className="mx-auto w-full max-w-3xl flex-1 px-4 py-8 sm:px-6 sm:py-12">
+    <main className="safe-x mx-auto w-full max-w-3xl flex-1 px-4 py-6 sm:px-6 sm:py-12">
       <Seo
         title={seoTitle}
         description={seoDescription}

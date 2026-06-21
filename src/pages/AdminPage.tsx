@@ -204,7 +204,7 @@ export function AdminPage() {
 
   if (isLoading && !stats) {
     return (
-      <main className="mx-auto w-full max-w-5xl flex-1 px-4 py-12 sm:px-6">
+      <main className="safe-x mx-auto w-full max-w-5xl flex-1 px-4 py-8 sm:px-6">
         <p className="text-center text-sm text-slate-500">Loading admin…</p>
       </main>
     )
@@ -212,7 +212,7 @@ export function AdminPage() {
 
   if (!isAuthed) {
     return (
-      <main className="mx-auto w-full max-w-md flex-1 px-4 py-12 sm:px-6">
+      <main className="safe-x mx-auto w-full max-w-md flex-1 px-4 py-8 sm:px-6">
         <Seo title="Admin" description="Starter admin dashboard" path="/admin" noIndex />
         <div className="rounded-2xl border border-white/[0.06] bg-navy-850/80 p-6 sm:p-8">
           <p className="mb-1 text-sm font-medium uppercase tracking-wider text-slate-400">
@@ -255,7 +255,7 @@ export function AdminPage() {
   const maxDayViews = Math.max(...stats.viewsByDay.map((day) => day.count), 1)
 
   return (
-    <main className="mx-auto w-full max-w-5xl flex-1 px-4 py-8 sm:px-6 sm:py-10">
+    <main className="safe-x mx-auto w-full max-w-5xl flex-1 px-4 py-6 sm:px-6 sm:py-10">
       <Seo title="Admin" description="Starter admin dashboard" path="/admin" noIndex />
 
       <div className="mb-8 flex flex-wrap items-start justify-between gap-4">
