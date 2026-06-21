@@ -69,7 +69,7 @@ export function IntakeForm({ onSubmit }: IntakeFormProps) {
               name="businessIdea"
               required
               placeholder="e.g. Food truck, tutoring, lawn care, Etsy shop, freelance — list a few if you're torn"
-              className="w-full rounded-xl border border-white/[0.06] bg-navy-900/50 px-4 py-3 text-sm text-slate-50 placeholder:text-slate-500 outline-none transition focus:border-teal-500/40 focus:ring-2 focus:ring-teal-500/15"
+              className="mobile-input w-full rounded-xl border border-white/[0.06] bg-navy-900/50 px-4 py-3 text-slate-50 placeholder:text-slate-500 outline-none transition focus:border-teal-500/40 focus:ring-2 focus:ring-teal-500/15"
             />
           </label>
 
@@ -106,7 +106,7 @@ export function IntakeForm({ onSubmit }: IntakeFormProps) {
                 if (!blockerType) setBlockerType('custom')
               }}
               placeholder="Pick an option above or describe what's blocking you in your own words"
-              className="w-full resize-none rounded-xl border border-white/[0.06] bg-navy-900/50 px-4 py-3 text-sm text-slate-50 placeholder:text-slate-500 outline-none transition focus:border-teal-500/40 focus:ring-2 focus:ring-teal-500/15"
+              className="mobile-input w-full resize-none rounded-xl border border-white/[0.06] bg-navy-900/50 px-4 py-3 text-slate-50 placeholder:text-slate-500 outline-none transition focus:border-teal-500/40 focus:ring-2 focus:ring-teal-500/15"
             />
           </fieldset>
 
@@ -117,7 +117,7 @@ export function IntakeForm({ onSubmit }: IntakeFormProps) {
             <select
               name="timeline"
               defaultValue={TIMELINE_OPTIONS[0]}
-              className="w-full rounded-xl border border-white/[0.06] bg-navy-900/50 px-4 py-3 text-sm text-slate-50 outline-none transition focus:border-teal-500/40 focus:ring-2 focus:ring-teal-500/15"
+              className="mobile-input touch-target w-full rounded-xl border border-white/[0.06] bg-navy-900/50 px-4 py-3 text-slate-50 outline-none transition focus:border-teal-500/40 focus:ring-2 focus:ring-teal-500/15"
             >
               {TIMELINE_OPTIONS.map((option) => (
                 <option key={option} value={option} className="bg-navy-900">

@@ -218,7 +218,7 @@ export function AdminPage() {
           <p className="mb-1 text-sm font-medium uppercase tracking-wider text-slate-400">
             Admin
           </p>
-          <h1 className="mb-2 text-2xl font-bold text-slate-50">Starter dashboard</h1>
+          <h1 className="mb-2 text-2xl font-bold text-slate-50 sm:text-3xl">Starter dashboard</h1>
           <p className="mb-6 text-sm text-slate-400">Sign in to manage analytics and blog posts.</p>
 
           <form onSubmit={handleLogin} className="space-y-4">
@@ -263,17 +263,17 @@ export function AdminPage() {
           <p className="mb-1 text-sm font-medium uppercase tracking-wider text-slate-400">
             Admin
           </p>
-          <h1 className="text-3xl font-bold text-slate-50">Dashboard</h1>
+          <h1 className="mb-2 text-2xl font-bold text-slate-50 sm:text-3xl">Dashboard</h1>
           <p className="mt-2 text-sm text-slate-400">Analytics and blog management.</p>
         </div>
-        <div className="flex gap-2">
+        <div className="flex w-full flex-wrap gap-2 sm:w-auto">
           <button
             type="button"
             onClick={() => {
               setActiveTab('blog')
               setOpenBlogEditor(true)
             }}
-            className="rounded-xl bg-gradient-to-r from-teal-500 to-emerald-600 px-4 py-2 text-sm font-semibold text-navy-950 transition hover:from-teal-400 hover:to-emerald-500"
+            className="touch-target rounded-xl bg-gradient-to-r from-teal-500 to-emerald-600 px-4 py-2 text-sm font-semibold text-navy-950 transition hover:from-teal-400 hover:to-emerald-500"
           >
             Write blog post
           </button>
@@ -281,7 +281,7 @@ export function AdminPage() {
             <button
               type="button"
               onClick={() => void loadStats().catch((err: Error) => setError(err.message))}
-              className="rounded-xl border border-white/[0.06] px-4 py-2 text-sm text-slate-300 transition hover:bg-white/[0.04]"
+              className="touch-target rounded-xl border border-white/[0.06] px-4 py-2 text-sm text-slate-300 transition hover:bg-white/[0.04]"
             >
               Refresh
             </button>
@@ -289,18 +289,18 @@ export function AdminPage() {
           <button
             type="button"
             onClick={() => void handleLogout()}
-            className="rounded-xl border border-white/[0.06] px-4 py-2 text-sm text-slate-300 transition hover:bg-white/[0.04]"
+            className="touch-target rounded-xl border border-white/[0.06] px-4 py-2 text-sm text-slate-300 transition hover:bg-white/[0.04]"
           >
             Log out
           </button>
         </div>
       </div>
 
-      <div className="mb-8 flex gap-2 border-b border-white/[0.06]">
+      <div className="scrollbar-hidden -mx-4 mb-8 flex gap-2 overflow-x-auto border-b border-white/[0.06] px-4 sm:mx-0 sm:px-0">
         <button
           type="button"
           onClick={() => setActiveTab('analytics')}
-          className={`border-b-2 px-4 py-2 text-sm font-medium transition ${
+          className={`touch-target shrink-0 border-b-2 px-4 py-2 text-sm font-medium transition ${
             activeTab === 'analytics'
               ? 'border-teal-400 text-teal-300'
               : 'border-transparent text-slate-400 hover:text-slate-200'
@@ -314,7 +314,7 @@ export function AdminPage() {
             setActiveTab('blog')
             setOpenBlogEditor(false)
           }}
-          className={`border-b-2 px-4 py-2 text-sm font-medium transition ${
+          className={`touch-target shrink-0 border-b-2 px-4 py-2 text-sm font-medium transition ${
             activeTab === 'blog'
               ? 'border-teal-400 text-teal-300'
               : 'border-transparent text-slate-400 hover:text-slate-200'
@@ -325,7 +325,7 @@ export function AdminPage() {
         <button
           type="button"
           onClick={() => setActiveTab('feedback')}
-          className={`border-b-2 px-4 py-2 text-sm font-medium transition ${
+          className={`touch-target shrink-0 border-b-2 px-4 py-2 text-sm font-medium transition ${
             activeTab === 'feedback'
               ? 'border-teal-400 text-teal-300'
               : 'border-transparent text-slate-400 hover:text-slate-200'
@@ -366,7 +366,7 @@ export function AdminPage() {
               type="button"
               disabled={isUpdatingExclusion}
               onClick={() => void handleExcludeDevice()}
-              className="rounded-xl border border-white/[0.06] px-4 py-2 text-sm text-slate-300 transition hover:bg-white/[0.04] disabled:opacity-50"
+              className="touch-target rounded-xl border border-white/[0.06] px-4 py-2 text-sm text-slate-300 transition hover:bg-white/[0.04] disabled:opacity-50"
             >
               Exclude this device
             </button>
@@ -468,7 +468,39 @@ export function AdminPage() {
         <h2 className="mb-4 text-sm font-semibold uppercase tracking-wider text-slate-400">
           Recent activity
         </h2>
-        <div className="overflow-x-auto">
+
+        <div className="space-y-3 md:hidden">
+          {stats.recentEvents.length === 0 && (
+            <p className="text-sm text-slate-500">No activity yet.</p>
+          )}
+          {stats.recentEvents.map((event) => (
+            <div
+              key={event.id}
+              className="rounded-xl border border-white/[0.04] bg-navy-900/40 p-4 text-sm"
+            >
+              <p className="text-xs text-slate-500">{formatTime(event.timestamp)}</p>
+              <p className="mt-1 font-medium text-slate-200">{event.type.replaceAll('_', ' ')}</p>
+              <p className="mt-1 break-all text-slate-400">{event.path}</p>
+              <div className="mt-2 flex items-center justify-between gap-2">
+                <span className="font-mono text-xs text-slate-500">
+                  {event.visitorId.slice(0, 8)}…
+                </span>
+                {!excludedVisitorIds.has(event.visitorId) && (
+                  <button
+                    type="button"
+                    disabled={isUpdatingExclusion}
+                    onClick={() => void handleExcludeDevice(event.visitorId, 'My device')}
+                    className="touch-target text-xs text-slate-400 transition hover:text-teal-300 disabled:opacity-50"
+                  >
+                    Exclude
+                  </button>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div className="hidden overflow-x-auto md:block">
           <table className="w-full min-w-[640px] text-left text-sm">
             <thead>
               <tr className="border-b border-white/[0.06] text-slate-500">

@@ -68,12 +68,12 @@ export function FeedbackForm({
         </p>
       )}
 
-      <div className="mb-3 flex gap-2">
+      <div className="mb-3 flex flex-wrap gap-2">
         <button
           type="button"
           disabled={isSubmitting}
           onClick={() => void handleSubmit('up')}
-          className={`rounded-xl border px-4 py-2 text-sm transition disabled:opacity-50 ${
+          className={`touch-target rounded-xl border px-4 py-2 text-sm transition disabled:opacity-50 ${
             rating === 'up'
               ? 'border-teal-500/40 bg-teal-500/15 text-teal-200'
               : 'border-white/[0.06] text-slate-300 hover:bg-white/[0.04]'
@@ -85,7 +85,7 @@ export function FeedbackForm({
           type="button"
           disabled={isSubmitting}
           onClick={() => void handleSubmit('down')}
-          className={`rounded-xl border px-4 py-2 text-sm transition disabled:opacity-50 ${
+          className={`touch-target rounded-xl border px-4 py-2 text-sm transition disabled:opacity-50 ${
             rating === 'down'
               ? 'border-amber-500/40 bg-amber-500/15 text-amber-200'
               : 'border-white/[0.06] text-slate-300 hover:bg-white/[0.04]'
@@ -104,7 +104,7 @@ export function FeedbackForm({
           onChange={(event) => setComment(event.target.value)}
           rows={compact ? 2 : 3}
           placeholder="One sentence is plenty"
-          className="w-full rounded-xl border border-white/[0.06] bg-navy-900/50 px-3 py-2 text-sm text-slate-50 placeholder:text-slate-600 outline-none transition focus:border-teal-500/40 focus:ring-2 focus:ring-teal-500/15"
+          className="mobile-input w-full rounded-xl border border-white/[0.06] bg-navy-900/50 px-3 py-2 text-slate-50 placeholder:text-slate-600 outline-none transition focus:border-teal-500/40 focus:ring-2 focus:ring-teal-500/15"
         />
       </label>
 

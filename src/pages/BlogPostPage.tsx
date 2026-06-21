@@ -75,7 +75,7 @@ export function BlogPostPage() {
           <span>{post.readMinutes} min read</span>
         </div>
 
-        <h1 className="mb-6 text-3xl font-bold leading-tight text-slate-50 sm:text-4xl">
+        <h1 className="mb-6 text-2xl font-bold leading-tight text-slate-50 sm:text-3xl md:text-4xl">
           {post.title}
         </h1>
 
@@ -93,7 +93,7 @@ export function BlogPostPage() {
         </p>
         <Link
           to="/"
-          className="inline-flex rounded-xl bg-gradient-to-r from-teal-500 to-emerald-600 px-5 py-3 text-sm font-semibold text-navy-950 transition hover:from-teal-400 hover:to-emerald-500"
+          className="touch-target inline-flex items-center rounded-xl bg-gradient-to-r from-teal-500 to-emerald-600 px-5 py-3 text-sm font-semibold text-navy-950 transition hover:from-teal-400 hover:to-emerald-500"
         >
           Talk to Starter
         </Link>

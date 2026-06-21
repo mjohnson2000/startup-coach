@@ -13,7 +13,7 @@ import {
 } from '../lib/blog-api'
 
 const inputClass =
-  'w-full rounded-xl border border-white/[0.06] bg-navy-900/50 px-4 py-3 text-sm text-slate-50 outline-none transition focus:border-teal-500/40 focus:ring-2 focus:ring-teal-500/15'
+  'mobile-input w-full rounded-xl border border-white/[0.06] bg-navy-900/50 px-4 py-3 text-slate-50 outline-none transition focus:border-teal-500/40 focus:ring-2 focus:ring-teal-500/15'
 
 function StatusBadge({ status }: { status: BlogPost['status'] }) {
   const styles =
@@ -136,7 +136,7 @@ export function AdminBlogPanel({ startInCreateMode = false }: { startInCreateMod
           <button
             type="button"
             onClick={startCreate}
-            className="rounded-xl bg-gradient-to-r from-teal-500 to-emerald-600 px-4 py-2 text-sm font-semibold text-navy-950 transition hover:from-teal-400 hover:to-emerald-500"
+            className="touch-target rounded-xl bg-gradient-to-r from-teal-500 to-emerald-600 px-4 py-2 text-sm font-semibold text-navy-950 transition hover:from-teal-400 hover:to-emerald-500"
           >
             New post
           </button>
@@ -284,7 +284,7 @@ export function AdminBlogPanel({ startInCreateMode = false }: { startInCreateMod
             <button
               type="submit"
               disabled={isSaving}
-              className="rounded-xl bg-gradient-to-r from-teal-500 to-emerald-600 px-4 py-2 text-sm font-semibold text-navy-950 transition hover:from-teal-400 hover:to-emerald-500 disabled:opacity-50"
+              className="touch-target rounded-xl bg-gradient-to-r from-teal-500 to-emerald-600 px-4 py-2 text-sm font-semibold text-navy-950 transition hover:from-teal-400 hover:to-emerald-500 disabled:opacity-50"
             >
               {isSaving ? 'Saving…' : editingId === 'new' ? 'Publish post' : 'Save changes'}
             </button>

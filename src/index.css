@@ -19,6 +19,8 @@
 html {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
+  overflow-x: clip;
 }
 
 body {
@@ -26,10 +28,12 @@ body {
   min-height: 100dvh;
   background-color: var(--color-navy-950);
   color: #f1f5f9;
+  overflow-x: clip;
 }
 
 #root {
   min-height: 100dvh;
+  overflow-x: clip;
 }
 
 /* iOS safe areas + prevent input zoom */
@@ -57,6 +61,16 @@ body {
 .touch-target {
   min-height: 44px;
   touch-action: manipulation;
+}
+
+.mobile-input {
+  font-size: 16px;
+}
+
+@media (min-width: 640px) {
+  .mobile-input {
+    font-size: 0.875rem;
+  }
 }
 
 .scrollbar-hidden {

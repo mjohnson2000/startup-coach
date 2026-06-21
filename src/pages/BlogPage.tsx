@@ -34,7 +34,7 @@ export function BlogPage() {
 
       <div className="mb-8">
         <p className="mb-1 text-sm font-medium uppercase tracking-wider text-slate-400">Blog</p>
-        <h1 className="mb-3 text-3xl font-bold text-slate-50">Ideas, starting, and getting unstuck</h1>
+        <h1 className="mb-3 text-2xl font-bold text-slate-50 sm:text-3xl">Ideas, starting, and getting unstuck</h1>
         <p className="max-w-2xl text-sm leading-relaxed text-slate-400">
           Short reads for young entrepreneurs with lots of ideas — how to pick one, stop researching,
           and take a real first step. Online or local.
@@ -55,7 +55,7 @@ export function BlogPage() {
               <span>·</span>
               <span>{post.readMinutes} min read</span>
             </div>
-            <h2 className="mb-2 text-xl font-semibold text-slate-50">
+            <h2 className="mb-2 text-lg font-semibold leading-snug text-slate-50 sm:text-xl">
               <Link to={`/blog/${post.slug}`} className="transition hover:text-teal-300">
                 {post.title}
               </Link>
@@ -84,7 +84,7 @@ export function BlogPage() {
         </p>
         <Link
           to="/"
-          className="inline-flex rounded-xl bg-gradient-to-r from-teal-500 to-emerald-600 px-5 py-3 text-sm font-semibold text-navy-950 transition hover:from-teal-400 hover:to-emerald-500"
+          className="touch-target inline-flex items-center rounded-xl bg-gradient-to-r from-teal-500 to-emerald-600 px-5 py-3 text-sm font-semibold text-navy-950 transition hover:from-teal-400 hover:to-emerald-500"
         >
           Help me start
         </Link>

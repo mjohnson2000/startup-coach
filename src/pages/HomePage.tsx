@@ -82,7 +82,7 @@ export function HomePage({ onMockModeChange }: HomePageProps) {
       className={
         view === 'chat'
           ? 'flex min-h-0 flex-1 flex-col overflow-hidden'
-          : 'flex-1'
+          : 'min-h-0 flex-1 overflow-y-auto overscroll-y-contain'
       }
     >
       {view === 'loading' && null}

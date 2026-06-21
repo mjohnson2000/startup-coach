@@ -194,7 +194,9 @@ export function ChatInterface({
       {todaysAction && <TodaysAction action={todaysAction} />}
 
       {showFeedback && (
-        <FeedbackForm context="chat" todaysAction={todaysAction ?? undefined} />
+        <div className="shrink-0">
+          <FeedbackForm context="chat" todaysAction={todaysAction ?? undefined} />
+        </div>
       )}
 
       <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-4 py-4 sm:px-6">
@@ -255,7 +257,7 @@ export function ChatInterface({
             placeholder={chatPlaceholder}
             rows={1}
             disabled={isLoading}
-            className="max-h-32 min-h-[44px] flex-1 resize-none rounded-xl border border-white/[0.06] bg-navy-850/80 px-4 py-3 text-base text-slate-50 placeholder:text-slate-500 outline-none transition focus:border-teal-500/40 focus:ring-2 focus:ring-teal-500/15 disabled:opacity-50 sm:text-sm"
+            className="mobile-input max-h-32 min-h-[44px] flex-1 resize-none rounded-xl border border-white/[0.06] bg-navy-850/80 px-4 py-3 text-slate-50 placeholder:text-slate-500 outline-none transition focus:border-teal-500/40 focus:ring-2 focus:ring-teal-500/15 disabled:opacity-50"
           />
           <button
             type="submit"
