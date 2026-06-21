@@ -175,7 +175,7 @@ export function ChatInterface({
 
   return (
     <div className="flex min-h-0 flex-1 flex-col">
-      <div className="flex items-center justify-between border-b border-teal-500/5 px-4 py-2 sm:px-6">
+      <div className="flex items-center justify-between border-b border-white/[0.04] px-4 py-2 sm:px-6">
         <p className="truncate text-xs text-slate-500">
           {STARTER_NAME}: <span className="text-slate-300">{intake.businessIdea}</span>
         </p>
@@ -199,8 +199,8 @@ export function ChatInterface({
           {isLoading && (
             <div className="flex items-end gap-2">
               <StarterAvatar size="sm" className="mb-1" />
-              <div className="rounded-2xl rounded-bl-md border border-teal-500/10 bg-navy-900/80 px-4 py-3">
-                <p className="mb-1 text-[10px] font-semibold uppercase tracking-wider text-teal-400">
+              <div className="rounded-2xl rounded-bl-md border border-white/[0.06] bg-navy-850/90 px-4 py-3">
+                <p className="mb-1 text-[10px] font-semibold uppercase tracking-wider text-slate-400">
                   {STARTER_NAME}
                 </p>
                 <div className="flex gap-1.5">
@@ -222,7 +222,7 @@ export function ChatInterface({
 
       <form
         onSubmit={handleSubmit}
-        className="border-t border-teal-500/10 bg-navy-950/60 px-4 py-4 backdrop-blur-md sm:px-6"
+        className="border-t border-white/[0.05] bg-navy-950/60 px-4 py-4 backdrop-blur-md sm:px-6"
       >
         {showSuggestedReplies && (
           <div className="mx-auto mb-3 flex max-w-3xl flex-wrap justify-center gap-2">
@@ -231,7 +231,7 @@ export function ChatInterface({
                 key={reply}
                 type="button"
                 onClick={() => handleSuggestedReply(reply)}
-                className="rounded-full border border-teal-500/10 bg-navy-900/60 px-3 py-1.5 text-xs text-slate-300 transition hover:border-teal-500/30 hover:bg-navy-800/80 hover:text-slate-50"
+                className="rounded-full border border-white/[0.06] bg-navy-850/70 px-3 py-1.5 text-xs text-slate-300 transition hover:border-teal-500/25 hover:bg-navy-800/80 hover:text-slate-50"
               >
                 {reply}
               </button>
@@ -248,7 +248,7 @@ export function ChatInterface({
             placeholder={followUp ? 'Tell Starter what happened...' : "What's keeping you stuck?"}
             rows={1}
             disabled={isLoading}
-            className="max-h-32 min-h-[44px] flex-1 resize-none rounded-xl border border-teal-500/10 bg-navy-900/80 px-4 py-3 text-sm text-slate-50 placeholder:text-slate-500 outline-none transition focus:border-teal-500/50 focus:ring-2 focus:ring-teal-500/20 disabled:opacity-50"
+            className="max-h-32 min-h-[44px] flex-1 resize-none rounded-xl border border-white/[0.06] bg-navy-850/80 px-4 py-3 text-sm text-slate-50 placeholder:text-slate-500 outline-none transition focus:border-teal-500/40 focus:ring-2 focus:ring-teal-500/15 disabled:opacity-50"
           />
           <button
             type="submit"

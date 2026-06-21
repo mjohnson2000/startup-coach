@@ -27,11 +27,11 @@ export function IntakeForm({ onSubmit }: IntakeFormProps) {
 
   return (
     <section className="animate-fade-in mx-auto w-full max-w-lg px-4 py-8 sm:px-6 sm:py-12">
-      <div className="rounded-2xl border border-teal-500/10 bg-navy-900/70 p-6 shadow-2xl shadow-black/30 backdrop-blur-sm sm:p-8">
+      <div className="rounded-2xl border border-white/[0.06] bg-navy-850/80 p-6 shadow-xl shadow-black/25 backdrop-blur-sm sm:p-8">
         <div className="mb-6 flex items-start gap-3">
           <StarterAvatar size="lg" className="mt-0.5" />
           <div>
-            <p className="mb-1 text-sm font-medium uppercase tracking-wider text-teal-400">
+            <p className="mb-1 text-sm font-medium uppercase tracking-wider text-slate-400">
               Young, lots of ideas?
             </p>
             <h2 className="mb-2 text-2xl font-bold text-slate-50">
@@ -54,7 +54,7 @@ export function IntakeForm({ onSubmit }: IntakeFormProps) {
               name="businessIdea"
               required
               placeholder="e.g. AI freelance, a simple app, Etsy shop — list a few if you're torn"
-              className="w-full rounded-xl border border-teal-500/10 bg-navy-950/60 px-4 py-3 text-sm text-slate-50 placeholder:text-slate-500 outline-none transition focus:border-teal-500/50 focus:ring-2 focus:ring-teal-500/20"
+              className="w-full rounded-xl border border-white/[0.06] bg-navy-900/50 px-4 py-3 text-sm text-slate-50 placeholder:text-slate-500 outline-none transition focus:border-teal-500/40 focus:ring-2 focus:ring-teal-500/15"
             />
           </label>
 
@@ -67,7 +67,7 @@ export function IntakeForm({ onSubmit }: IntakeFormProps) {
               required
               rows={3}
               placeholder="e.g. I have 5 ideas and can't choose — I use AI and watch tutorials but never launch"
-              className="w-full resize-none rounded-xl border border-teal-500/10 bg-navy-950/60 px-4 py-3 text-sm text-slate-50 placeholder:text-slate-500 outline-none transition focus:border-teal-500/50 focus:ring-2 focus:ring-teal-500/20"
+              className="w-full resize-none rounded-xl border border-white/[0.06] bg-navy-900/50 px-4 py-3 text-sm text-slate-50 placeholder:text-slate-500 outline-none transition focus:border-teal-500/40 focus:ring-2 focus:ring-teal-500/15"
             />
           </label>
 
@@ -78,7 +78,7 @@ export function IntakeForm({ onSubmit }: IntakeFormProps) {
             <select
               name="timeline"
               defaultValue={TIMELINE_OPTIONS[0]}
-              className="w-full rounded-xl border border-teal-500/10 bg-navy-950/60 px-4 py-3 text-sm text-slate-50 outline-none transition focus:border-teal-500/50 focus:ring-2 focus:ring-teal-500/20"
+              className="w-full rounded-xl border border-white/[0.06] bg-navy-900/50 px-4 py-3 text-sm text-slate-50 outline-none transition focus:border-teal-500/40 focus:ring-2 focus:ring-teal-500/15"
             >
               {TIMELINE_OPTIONS.map((option) => (
                 <option key={option} value={option} className="bg-navy-900">

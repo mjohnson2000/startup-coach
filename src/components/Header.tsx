@@ -6,7 +6,7 @@ interface HeaderProps {
 
 export function Header({ isMockMode }: HeaderProps) {
   return (
-    <header className="border-b border-teal-500/10 bg-navy-950/50 px-4 py-4 backdrop-blur-md sm:px-6">
+    <header className="border-b border-white/[0.05] bg-navy-950/60 px-4 py-4 backdrop-blur-md sm:px-6">
       <div className="mx-auto flex max-w-3xl items-center justify-between gap-3">
         <div className="flex items-center gap-3">
           <StarterAvatar size="md" />

@@ -25,8 +25,8 @@ export function MessageBubble({ message }: MessageBubbleProps) {
   return (
     <div className="animate-fade-in flex items-end gap-2">
       <StarterAvatar size="sm" className="mb-1" />
-      <div className="max-w-[85%] rounded-2xl rounded-bl-md border border-teal-500/10 bg-navy-900/80 px-4 py-3 text-sm leading-relaxed text-slate-100 sm:max-w-[75%] sm:text-[15px]">
-        <p className="mb-1 text-[10px] font-semibold uppercase tracking-wider text-teal-400">
+      <div className="max-w-[85%] rounded-2xl rounded-bl-md border border-white/[0.06] bg-navy-850/90 px-4 py-3 text-sm leading-relaxed text-slate-100 sm:max-w-[75%] sm:text-[15px]">
+        <p className="mb-1 text-[10px] font-semibold uppercase tracking-wider text-slate-400">
           {STARTER_NAME}
         </p>
         <p className="whitespace-pre-wrap">{displayContent}</p>

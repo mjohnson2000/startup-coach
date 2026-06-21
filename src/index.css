@@ -9,6 +9,11 @@
   --color-navy-900: #111827;
   --color-navy-850: #162032;
   --color-navy-800: #1c2a42;
+
+  /* Warm accent — encouragement without hustle-bro energy */
+  --color-warm-950: #1a1408;
+  --color-warm-400: #fbbf24;
+  --color-warm-300: #fcd34d;
 }
 
 html {
