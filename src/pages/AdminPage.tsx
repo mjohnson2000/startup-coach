@@ -140,17 +140,17 @@ export function AdminPage() {
     setExclusions([])
   }
 
-  async function handleExcludeDevice() {
+  async function handleExcludeDevice(visitorId?: string, label = 'My device') {
     setIsUpdatingExclusion(true)
     setError(null)
 
     try {
-      const visitorId = getVisitorId()
+      const id = visitorId ?? getVisitorId()
       const response = await fetch('/api/admin/exclusions', {
         method: 'POST',
         credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ visitorId, label: 'Admin device' }),
+        body: JSON.stringify({ visitorId: id, label }),
       })
 
       if (!response.ok) {
@@ -158,7 +158,10 @@ export function AdminPage() {
         throw new Error(data.error ?? 'Failed to exclude device')
       }
 
-      setAnalyticsExcludedLocally(true)
+      if (id === getVisitorId()) {
+        setAnalyticsExcludedLocally(true)
+      }
+
       await loadStats()
       await loadExclusions()
     } catch (err) {
@@ -195,6 +198,8 @@ export function AdminPage() {
       setIsUpdatingExclusion(false)
     }
   }
+
+  const excludedVisitorIds = new Set(exclusions.map((entry) => entry.visitorId))
 
   if (isLoading && !stats) {
     return (
@@ -334,7 +339,8 @@ export function AdminPage() {
               Your devices
             </h2>
             <p className="mt-2 text-sm text-slate-400">
-              Admin visits and your devices are excluded from the stats below.
+              Exclude any device you use for testing — phone, laptop, etc. Admin page visits are
+              never counted.
             </p>
             <p className="mt-2 font-mono text-xs text-slate-500">
               This device: {getVisitorId().slice(0, 8)}…
@@ -456,6 +462,7 @@ export function AdminPage() {
                 <th className="pb-2 pr-4 font-medium">Event</th>
                 <th className="pb-2 pr-4 font-medium">Path</th>
                 <th className="pb-2 font-medium">Visitor</th>
+                <th className="pb-2 font-medium" />
               </tr>
             </thead>
             <tbody>
@@ -468,6 +475,18 @@ export function AdminPage() {
                   <td className="py-2 pr-4">{event.path}</td>
                   <td className="py-2 font-mono text-xs text-slate-500">
                     {event.visitorId.slice(0, 8)}…
+                  </td>
+                  <td className="py-2 text-right">
+                    {!excludedVisitorIds.has(event.visitorId) && (
+                      <button
+                        type="button"
+                        disabled={isUpdatingExclusion}
+                        onClick={() => void handleExcludeDevice(event.visitorId, 'My device')}
+                        className="text-xs text-slate-400 transition hover:text-teal-300 disabled:opacity-50"
+                      >
+                        Exclude
+                      </button>
+                    )}
                   </td>
                 </tr>
               ))}

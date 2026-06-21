@@ -99,7 +99,7 @@ app.post('/api/admin/login', (req, res) => {
 
   const visitorId = String(req.body?.visitorId ?? '').trim()
   if (visitorId) {
-    excludeVisitor(visitorId, 'Admin login')
+    excludeVisitor(visitorId, 'My device')
   }
 
   setAdminCookie(res, token)
