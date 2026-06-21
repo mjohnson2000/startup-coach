@@ -32,7 +32,7 @@ export function IntakeForm({ onSubmit }: IntakeFormProps) {
           <StarterAvatar size="lg" className="mt-0.5" />
           <div>
             <p className="mb-1 text-sm font-medium uppercase tracking-wider text-slate-400">
-              Young, lots of ideas?
+              Young entrepreneur, lots of ideas?
             </p>
             <h2 className="mb-2 text-2xl font-bold text-slate-50">
               Pick one and start

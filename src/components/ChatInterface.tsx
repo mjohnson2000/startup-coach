@@ -57,7 +57,7 @@ function buildKickoff(intake: IntakeData, followUp?: FollowUpContext): string {
     return `I'm back for a follow-up on my business ideas ("${intake.businessIdea}"). Last session Starter asked me to: "${followUp.lastAction}". Status: ${statusLabel}. What's still keeping me stuck: ${intake.blocker}.`
   }
 
-  return `I'm young and just starting — I want to launch a business but I'm stuck. I have a lot of ideas — top ones: "${intake.businessIdea}". What's keeping me stuck: ${intake.blocker}. I want to start ${intake.timeline.toLowerCase()}.`
+  return `I'm a young entrepreneur and want to start a business but I'm stuck. I have a lot of ideas — top ones: "${intake.businessIdea}". What's keeping me stuck: ${intake.blocker}. I want to start ${intake.timeline.toLowerCase()}.`
 }
 
 export function ChatInterface({
