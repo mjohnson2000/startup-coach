@@ -1,12 +1,14 @@
 import { useEffect, useRef, useState } from 'react'
 import { sendChatMessage } from '../lib/api'
-import type { ChatMessage, IntakeData } from '../types/chat'
+import { saveSession } from '../lib/session-storage'
+import type { ChatMessage, FollowUpContext, IntakeData } from '../types/chat'
 import { MessageBubble } from './MessageBubble'
 import { STARTER_NAME, StarterAvatar } from './StarterAvatar'
 import { TodaysAction } from './TodaysAction'
 
 interface ChatInterfaceProps {
   intake: IntakeData
+  followUp?: FollowUpContext
   onReset: () => void
   onMockModeChange?: (isMock: boolean) => void
 }
@@ -17,14 +19,25 @@ const SUGGESTED_REPLIES = [
   "I'm good with AI but don't know what to sell",
 ]
 
+const FOLLOW_UP_SUGGESTED_REPLIES = [
+  "Here's what I learned",
+  'Something blocked me',
+  'I need a smaller next step',
+]
+
 const MIN_TYPING_MS = 450
 
-function createMessage(role: 'user' | 'assistant', content: string): ChatMessage {
+function createMessage(
+  role: 'user' | 'assistant',
+  content: string,
+  options?: { hidden?: boolean },
+): ChatMessage {
   return {
     id: crypto.randomUUID(),
     role,
     content,
     createdAt: Date.now(),
+    hidden: options?.hidden,
   }
 }
 
@@ -32,7 +45,27 @@ function wait(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms))
 }
 
-export function ChatInterface({ intake, onReset, onMockModeChange }: ChatInterfaceProps) {
+function buildKickoff(intake: IntakeData, followUp?: FollowUpContext): string {
+  if (followUp) {
+    const statusLabel =
+      followUp.status === 'completed'
+        ? 'Yes, I completed it'
+        : followUp.status === 'partial'
+          ? 'I made partial progress'
+          : 'Not yet — I did not complete it'
+
+    return `I'm back for a follow-up on my business ideas ("${intake.businessIdea}"). Last session Starter asked me to: "${followUp.lastAction}". Status: ${statusLabel}. What's still keeping me stuck: ${intake.blocker}.`
+  }
+
+  return `I'm a recent grad (or between jobs) and want to start a business but I'm stuck. I have a lot of ideas — top ones: "${intake.businessIdea}". What's keeping me stuck: ${intake.blocker}. I want to start ${intake.timeline.toLowerCase()}. I'm comfortable with AI and online tools.`
+}
+
+export function ChatInterface({
+  intake,
+  followUp,
+  onReset,
+  onMockModeChange,
+}: ChatInterfaceProps) {
   const [messages, setMessages] = useState<ChatMessage[]>([])
   const [input, setInput] = useState('')
   const [isLoading, setIsLoading] = useState(false)
@@ -47,6 +80,12 @@ export function ChatInterface({ intake, onReset, onMockModeChange }: ChatInterfa
   }, [messages, isLoading])
 
   useEffect(() => {
+    if (todaysAction) {
+      saveSession(intake, todaysAction)
+    }
+  }, [intake, todaysAction])
+
+  useEffect(() => {
     if (hasStarted) return
 
     async function startSession() {
@@ -55,13 +94,14 @@ export function ChatInterface({ intake, onReset, onMockModeChange }: ChatInterfa
       setError(null)
 
       try {
-        const kickoff = `I'm a recent grad (or between jobs) and want to start a business but I'm stuck. I have a lot of ideas — top ones: "${intake.businessIdea}". What's keeping me stuck: ${intake.blocker}. I want to start ${intake.timeline.toLowerCase()}. I'm comfortable with AI and online tools.`
-        const userMessage = createMessage('user', kickoff)
+        const kickoff = buildKickoff(intake, followUp)
+        const userMessage = createMessage('user', kickoff, { hidden: true })
 
         const [response] = await Promise.all([
           sendChatMessage({
             messages: [{ role: 'user', content: kickoff }],
             intake,
+            followUp,
           }),
           wait(MIN_TYPING_MS),
         ])
@@ -78,7 +118,7 @@ export function ChatInterface({ intake, onReset, onMockModeChange }: ChatInterfa
     }
 
     startSession()
-  }, [hasStarted, intake, onMockModeChange])
+  }, [followUp, hasStarted, intake, onMockModeChange])
 
   async function sendUserMessage(trimmed: string) {
     if (!trimmed || isLoading) return
@@ -93,8 +133,11 @@ export function ChatInterface({ intake, onReset, onMockModeChange }: ChatInterfa
     try {
       const [response] = await Promise.all([
         sendChatMessage({
-          messages: nextMessages.map(({ role, content }) => ({ role, content })),
+          messages: nextMessages
+            .filter((message) => !message.hidden)
+            .map(({ role, content }) => ({ role, content })),
           intake,
+          followUp,
         }),
         wait(MIN_TYPING_MS),
       ])
@@ -126,7 +169,9 @@ export function ChatInterface({ intake, onReset, onMockModeChange }: ChatInterfa
     }
   }
 
-  const showSuggestedReplies = !isLoading && messages.length >= 2 && !input.trim()
+  const visibleMessages = messages.filter((message) => !message.hidden)
+  const suggestedReplies = followUp ? FOLLOW_UP_SUGGESTED_REPLIES : SUGGESTED_REPLIES
+  const showSuggestedReplies = !isLoading && visibleMessages.length >= 1 && !input.trim()
 
   return (
     <div className="flex min-h-0 flex-1 flex-col">
@@ -147,9 +192,9 @@ export function ChatInterface({ intake, onReset, onMockModeChange }: ChatInterfa
 
       <div className="flex-1 overflow-y-auto px-4 py-4 sm:px-6">
         <div className="mx-auto flex max-w-3xl flex-col gap-5">
-          {messages.map((message) => (
-            <MessageBubble key={message.id} message={message} />
-          ))}
+          {messages.map((message) =>
+            message.hidden ? null : <MessageBubble key={message.id} message={message} />,
+          )}
 
           {isLoading && (
             <div className="flex items-end gap-2">
@@ -181,7 +226,7 @@ export function ChatInterface({ intake, onReset, onMockModeChange }: ChatInterfa
       >
         {showSuggestedReplies && (
           <div className="mx-auto mb-3 flex max-w-3xl flex-wrap justify-center gap-2">
-            {SUGGESTED_REPLIES.map((reply) => (
+            {suggestedReplies.map((reply) => (
               <button
                 key={reply}
                 type="button"
@@ -200,7 +245,7 @@ export function ChatInterface({ intake, onReset, onMockModeChange }: ChatInterfa
             value={input}
             onChange={(event) => setInput(event.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder="What's keeping you stuck?"
+            placeholder={followUp ? 'Tell Starter what happened...' : "What's keeping you stuck?"}
             rows={1}
             disabled={isLoading}
             className="max-h-32 min-h-[44px] flex-1 resize-none rounded-xl border border-teal-500/10 bg-navy-900/80 px-4 py-3 text-sm text-slate-50 placeholder:text-slate-500 outline-none transition focus:border-teal-500/50 focus:ring-2 focus:ring-teal-500/20 disabled:opacity-50"

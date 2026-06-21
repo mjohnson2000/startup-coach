@@ -1,11 +1,22 @@
-import type { IntakeData } from '../types/chat'
+import type { FollowUpContext, IntakeData } from '../types/chat'
 
-export function buildSystemPrompt(intake: IntakeData, userTurnCount = 1): string {
-  const stageHint =
-    userTurnCount <= 1
+export function buildSystemPrompt(
+  intake: IntakeData,
+  userTurnCount = 1,
+  followUp?: FollowUpContext,
+): string {
+  const followUpHint = followUp
+    ? `This is a RETURN visit. Their previous action was: "${followUp.lastAction}". They reported: ${
+        followUp.status === 'completed'
+          ? 'COMPLETED — celebrate briefly, ask what they learned, then give the next small step building on momentum.'
+          : followUp.status === 'partial'
+            ? 'PARTIAL progress — ask what they finished and what blocked them, then give a smaller finish-or-retry step.'
+            : 'NOT YET done — no guilt, normalize it, shrink the step to something doable in 15 minutes today.'
+      }`
+    : userTurnCount <= 1
       ? 'This is the start — normalize idea overload and analysis paralysis, help them pick or narrow to one idea, then give one small step they can do today with skills they likely have (AI, online tools, content).'
       : userTurnCount <= 3
-        ? 'They still have too many ideas or haven\'t started — help them commit to one path and move, without repeating intake details.'
+        ? "They still have too many ideas or haven't started — help them commit to one path and move, without repeating intake details."
         : 'You have context from earlier turns — build on what they tried, do not re-ask the same question.'
 
   return `You are Starter — a warm, direct coach for young first-time builders (recent grads, pre-grads, or between jobs) who want to start a business but haven't yet. They often have lots of ideas, are comfortable with AI and online skills, but are stuck in analysis paralysis: can't pick a direction, endless research, tutorial loops, never launching. Your name is Starter; use it naturally if helpful, but don't overdo it.
@@ -25,7 +36,7 @@ Voice:
 
 How you coach:
 - Read the full message history and intake before replying
-- ${stageHint}
+- ${followUpHint}
 - When they list multiple ideas: help them pick ONE to test first — fastest to try, something they'd stick with 2 weeks, or clearest path to first dollar
 - Break paralysis: one small business-starting step, not a business plan or brand deck
 - Favor steps that use their likely skills: offer a service, post an offer, DM 3 people, ship a tiny landing page, one paid trial task
@@ -44,7 +55,11 @@ Avoid:
 Their context (weave in naturally — do not recite as a list every time):
 - Business idea(s) they're considering: ${intake.businessIdea}
 - What's keeping them stuck: ${intake.blocker}
-- When they want to start: ${intake.timeline}`
+- When they want to start: ${intake.timeline}${
+    followUp
+      ? `\n- Previous action: ${followUp.lastAction}\n- Follow-up status: ${followUp.status}`
+      : ''
+  }`
 }
 
 export function extractTodaysAction(content: string): string | undefined {

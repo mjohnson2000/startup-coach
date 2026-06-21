@@ -1,4 +1,4 @@
-import type { IntakeData } from '../src/types/chat'
+import type { FollowUpContext, IntakeData } from '../src/types/chat'
 import { buildSystemPrompt, extractTodaysAction } from '../src/lib/coach'
 import OpenAI from 'openai'
 
@@ -301,6 +301,7 @@ function hasValidApiKey(key: string | undefined): key is string {
 export async function handleChat(
   messages: ChatMessageInput[],
   intake: IntakeData,
+  followUp?: FollowUpContext,
 ): Promise<{ message: string; todaysAction?: string; isMock: boolean }> {
   const apiKey = process.env.OPENAI_API_KEY
   const userTurnCount = getUserTurnCount(messages)
@@ -316,7 +317,7 @@ export async function handleChat(
     const response = await openai.chat.completions.create({
       model: 'gpt-4o-mini',
       messages: [
-        { role: 'system', content: buildSystemPrompt(intake, userTurnCount) },
+        { role: 'system', content: buildSystemPrompt(intake, userTurnCount, followUp) },
         ...messages,
       ],
       max_tokens: 450,

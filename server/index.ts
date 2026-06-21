@@ -15,8 +15,8 @@ app.use(express.json({ limit: '1mb' }))
 
 app.post('/api/chat', async (req, res) => {
   try {
-    const { messages, intake } = req.body
-    const result = await handleChat(messages, intake)
+    const { messages, intake, followUp } = req.body
+    const result = await handleChat(messages, intake, followUp)
 
     res.json({
       message: result.message,

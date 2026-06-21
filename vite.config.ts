@@ -30,8 +30,8 @@ function chatApiPlugin() {
 
           try {
             const body = await readBody(req)
-            const { messages, intake } = JSON.parse(body)
-            const result = await handleChat(messages, intake)
+            const { messages, intake, followUp } = JSON.parse(body)
+            const result = await handleChat(messages, intake, followUp)
 
             res.setHeader('Content-Type', 'application/json')
             res.statusCode = 200
