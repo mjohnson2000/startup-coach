@@ -12,9 +12,9 @@ interface ChatInterfaceProps {
 }
 
 const SUGGESTED_REPLIES = [
-  "I'm not sure where to start",
-  "I don't have much time",
-  "I'm nervous to talk to people",
+  "I have too many ideas and can't pick one",
+  'I keep learning but never start',
+  "I'm good with AI but don't know what to sell",
 ]
 
 const MIN_TYPING_MS = 450
@@ -55,7 +55,7 @@ export function ChatInterface({ intake, onReset, onMockModeChange }: ChatInterfa
       setError(null)
 
       try {
-        const kickoff = `I want to start my business. My idea is "${intake.businessIdea}". What's blocking me: ${intake.blocker}. I want to launch ${intake.timeline.toLowerCase()}.`
+        const kickoff = `I'm a recent grad (or between jobs) and want to start an online business but I'm stuck. What I might build: "${intake.businessIdea}". What's keeping me stuck: ${intake.blocker}. I want to take my first real step ${intake.timeline.toLowerCase()}. I'm comfortable with AI and online tools.`
         const userMessage = createMessage('user', kickoff)
 
         const [response] = await Promise.all([
@@ -200,7 +200,7 @@ export function ChatInterface({ intake, onReset, onMockModeChange }: ChatInterfa
             value={input}
             onChange={(event) => setInput(event.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder={`Tell ${STARTER_NAME} what's holding you back...`}
+            placeholder="What's keeping you stuck?"
             rows={1}
             disabled={isLoading}
             className="max-h-32 min-h-[44px] flex-1 resize-none rounded-xl border border-teal-500/10 bg-navy-900/80 px-4 py-3 text-sm text-slate-50 placeholder:text-slate-500 outline-none transition focus:border-teal-500/50 focus:ring-2 focus:ring-teal-500/20 disabled:opacity-50"

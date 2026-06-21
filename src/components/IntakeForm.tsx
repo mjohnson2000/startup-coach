@@ -9,7 +9,7 @@ const TIMELINE_OPTIONS = [
   'This week',
   'This month',
   'Within 3 months',
-  'Just exploring',
+  'Still exploring ideas',
 ]
 
 export function IntakeForm({ onSubmit }: IntakeFormProps) {
@@ -21,7 +21,7 @@ export function IntakeForm({ onSubmit }: IntakeFormProps) {
     onSubmit({
       businessIdea: String(formData.get('businessIdea') ?? '').trim(),
       blocker: String(formData.get('blocker') ?? '').trim(),
-      timeline: String(formData.get('timeline') ?? TIMELINE_OPTIONS[1]),
+      timeline: String(formData.get('timeline') ?? TIMELINE_OPTIONS[0]),
     })
   }
 
@@ -32,14 +32,15 @@ export function IntakeForm({ onSubmit }: IntakeFormProps) {
           <StarterAvatar size="lg" className="mt-0.5" />
           <div>
             <p className="mb-1 text-sm font-medium uppercase tracking-wider text-teal-400">
-              Meet {STARTER_NAME}
+              Skilled online, stuck on step one?
             </p>
             <h2 className="mb-2 text-2xl font-bold text-slate-50">
-              What are you building?
+              You don&apos;t need another course
             </h2>
             <p className="text-sm leading-relaxed text-slate-400">
-              Share your idea, biggest blocker, and timeline. {STARTER_NAME} is
-              your friendly mentor — focused first session, no fluff.
+              Recent grad or between jobs, good with AI and the internet, but paralyzed by options?
+              Tell {STARTER_NAME} where you&apos;re at — you&apos;ll get one clear first move, not more
+              research.
             </p>
           </div>
         </div>
@@ -47,36 +48,36 @@ export function IntakeForm({ onSubmit }: IntakeFormProps) {
         <form onSubmit={handleSubmit} className="space-y-5">
           <label className="block">
             <span className="mb-1.5 block text-sm font-medium text-slate-200">
-              Business idea
+              What do you want to build? (rough is fine)
             </span>
             <input
               name="businessIdea"
               required
-              placeholder="e.g. Meal prep for busy parents"
+              placeholder="e.g. AI freelance services, a simple app, content business — or 'not sure yet'"
               className="w-full rounded-xl border border-teal-500/10 bg-navy-950/60 px-4 py-3 text-sm text-slate-50 placeholder:text-slate-500 outline-none transition focus:border-teal-500/50 focus:ring-2 focus:ring-teal-500/20"
             />
           </label>
 
           <label className="block">
             <span className="mb-1.5 block text-sm font-medium text-slate-200">
-              What&apos;s blocking you?
+              What&apos;s keeping you stuck?
             </span>
             <textarea
               name="blocker"
               required
               rows={3}
-              placeholder="e.g. I keep researching instead of talking to customers"
+              placeholder="e.g. Too many ideas — I watch tutorials and use AI but never actually start anything"
               className="w-full resize-none rounded-xl border border-teal-500/10 bg-navy-950/60 px-4 py-3 text-sm text-slate-50 placeholder:text-slate-500 outline-none transition focus:border-teal-500/50 focus:ring-2 focus:ring-teal-500/20"
             />
           </label>
 
           <label className="block">
             <span className="mb-1.5 block text-sm font-medium text-slate-200">
-              When do you want to launch?
+              When do you want your first real step?
             </span>
             <select
               name="timeline"
-              defaultValue={TIMELINE_OPTIONS[1]}
+              defaultValue={TIMELINE_OPTIONS[0]}
               className="w-full rounded-xl border border-teal-500/10 bg-navy-950/60 px-4 py-3 text-sm text-slate-50 outline-none transition focus:border-teal-500/50 focus:ring-2 focus:ring-teal-500/20"
             >
               {TIMELINE_OPTIONS.map((option) => (
@@ -91,7 +92,7 @@ export function IntakeForm({ onSubmit }: IntakeFormProps) {
             type="submit"
             className="w-full rounded-xl bg-gradient-to-r from-teal-500 to-emerald-600 px-4 py-3.5 text-sm font-semibold text-navy-950 shadow-lg shadow-teal-500/25 transition hover:from-teal-400 hover:to-emerald-500 active:scale-[0.99]"
           >
-            Start with {STARTER_NAME}
+            Show me where to start
           </button>
         </form>
       </div>

@@ -1,5 +1,5 @@
 export const STARTER_NAME = 'Starter'
-export const STARTER_TAGLINE = 'Your sharp, friendly startup mentor'
+export const STARTER_TAGLINE = 'For grads stuck on step one'
 
 const SIZE_PX = {
   sm: 28,
