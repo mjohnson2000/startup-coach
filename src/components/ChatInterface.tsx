@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { sendChatMessage } from '../lib/api'
 import { trackEvent } from '../lib/analytics'
 import { saveSession } from '../lib/session-storage'
+import { getChatPlaceholder, getSuggestedReplies } from '../lib/suggested-replies'
 import type { ChatMessage, FollowUpContext, IntakeData } from '../types/chat'
 import { FeedbackForm } from './FeedbackForm'
 import { MessageBubble } from './MessageBubble'
@@ -14,18 +15,6 @@ interface ChatInterfaceProps {
   onReset: () => void
   onMockModeChange?: (isMock: boolean) => void
 }
-
-const SUGGESTED_REPLIES = [
-  "I have too many ideas and can't pick one",
-  'I keep researching but never start',
-  "I'm not sure anyone would pay for this",
-]
-
-const FOLLOW_UP_SUGGESTED_REPLIES = [
-  "Here's what I learned",
-  'Something blocked me',
-  'I need a smaller next step',
-]
 
 const MIN_TYPING_MS = 450
 
@@ -176,7 +165,15 @@ export function ChatInterface({
   }
 
   const visibleMessages = messages.filter((message) => !message.hidden)
-  const suggestedReplies = followUp ? FOLLOW_UP_SUGGESTED_REPLIES : SUGGESTED_REPLIES
+  const userMessageCount = visibleMessages.filter((message) => message.role === 'user').length
+  const conversationContext = {
+    intake,
+    followUp,
+    userMessageCount,
+    hasTodaysAction: Boolean(todaysAction),
+  }
+  const suggestedReplies = getSuggestedReplies(conversationContext)
+  const chatPlaceholder = getChatPlaceholder(conversationContext)
   const showSuggestedReplies = !isLoading && visibleMessages.length >= 1 && !input.trim()
 
   return (
@@ -255,7 +252,7 @@ export function ChatInterface({
             value={input}
             onChange={(event) => setInput(event.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder={followUp ? 'Tell Starter what happened...' : "What's keeping you stuck?"}
+            placeholder={chatPlaceholder}
             rows={1}
             disabled={isLoading}
             className="max-h-32 min-h-[44px] flex-1 resize-none rounded-xl border border-white/[0.06] bg-navy-850/80 px-4 py-3 text-sm text-slate-50 placeholder:text-slate-500 outline-none transition focus:border-teal-500/40 focus:ring-2 focus:ring-teal-500/15 disabled:opacity-50"

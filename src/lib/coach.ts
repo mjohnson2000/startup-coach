@@ -56,7 +56,7 @@ Avoid:
 
 Their context (weave in naturally — do not recite as a list every time):
 - Business idea(s) they're considering: ${intake.businessIdea}
-- What's keeping them stuck: ${intake.blocker}
+- What's keeping them stuck: ${intake.blocker}${intake.blockerType && intake.blockerType !== 'custom' ? ` (main pattern: ${intake.blockerType.replaceAll('_', ' ')})` : ''}
 - When they want to start: ${intake.timeline}${
     followUp
       ? `\n- Previous action: ${followUp.lastAction}\n- Follow-up status: ${followUp.status}`

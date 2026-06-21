@@ -1,4 +1,6 @@
-import type { IntakeData } from '../types/chat'
+import { useState } from 'react'
+import type { BlockerType, IntakeData } from '../types/chat'
+import { BLOCKER_OPTIONS } from '../types/chat'
 import { trackEvent } from '../lib/analytics'
 import { STARTER_NAME, StarterAvatar } from './StarterAvatar'
 
@@ -14,14 +16,26 @@ const TIMELINE_OPTIONS = [
 ]
 
 export function IntakeForm({ onSubmit }: IntakeFormProps) {
+  const [blockerType, setBlockerType] = useState<BlockerType | null>(null)
+  const [blocker, setBlocker] = useState('')
+
+  function selectBlocker(type: BlockerType, text: string) {
+    setBlockerType(type)
+    setBlocker(text)
+  }
+
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
     const form = event.currentTarget
     const formData = new FormData(form)
+    const blockerText = blocker.trim()
+
+    if (!blockerText) return
 
     onSubmit({
       businessIdea: String(formData.get('businessIdea') ?? '').trim(),
-      blocker: String(formData.get('blocker') ?? '').trim(),
+      blocker: blockerText,
+      blockerType: blockerType ?? 'custom',
       timeline: String(formData.get('timeline') ?? TIMELINE_OPTIONS[0]),
     })
     void trackEvent('intake_submitted')
@@ -59,18 +73,42 @@ export function IntakeForm({ onSubmit }: IntakeFormProps) {
             />
           </label>
 
-          <label className="block">
-            <span className="mb-1.5 block text-sm font-medium text-slate-200">
+          <fieldset className="block">
+            <legend className="mb-1.5 block text-sm font-medium text-slate-200">
               What&apos;s keeping you stuck?
-            </span>
+            </legend>
+            <p className="mb-3 text-xs text-slate-500">
+              Pick the closest match, then edit the details if you want.
+            </p>
+            <div className="mb-3 flex flex-wrap gap-2">
+              {BLOCKER_OPTIONS.map((option) => (
+                <button
+                  key={option.type}
+                  type="button"
+                  onClick={() => selectBlocker(option.type, option.text)}
+                  className={`rounded-full border px-3 py-1.5 text-xs transition ${
+                    blockerType === option.type
+                      ? 'border-teal-500/40 bg-teal-500/15 text-teal-200'
+                      : 'border-white/[0.06] bg-navy-900/50 text-slate-300 hover:border-teal-500/25 hover:text-slate-50'
+                  }`}
+                >
+                  {option.label}
+                </button>
+              ))}
+            </div>
             <textarea
               name="blocker"
               required
               rows={3}
-              placeholder="e.g. I have 5 ideas and can't choose — I keep researching but never take the first step"
+              value={blocker}
+              onChange={(event) => {
+                setBlocker(event.target.value)
+                if (!blockerType) setBlockerType('custom')
+              }}
+              placeholder="Pick an option above or describe what's blocking you in your own words"
               className="w-full resize-none rounded-xl border border-white/[0.06] bg-navy-900/50 px-4 py-3 text-sm text-slate-50 placeholder:text-slate-500 outline-none transition focus:border-teal-500/40 focus:ring-2 focus:ring-teal-500/15"
             />
-          </label>
+          </fieldset>
 
           <label className="block">
             <span className="mb-1.5 block text-sm font-medium text-slate-200">
@@ -91,7 +129,8 @@ export function IntakeForm({ onSubmit }: IntakeFormProps) {
 
           <button
             type="submit"
-            className="w-full rounded-xl bg-gradient-to-r from-teal-500 to-emerald-600 px-4 py-3.5 text-sm font-semibold text-navy-950 shadow-lg shadow-teal-500/25 transition hover:from-teal-400 hover:to-emerald-500 active:scale-[0.99]"
+            disabled={!blocker.trim()}
+            className="w-full rounded-xl bg-gradient-to-r from-teal-500 to-emerald-600 px-4 py-3.5 text-sm font-semibold text-navy-950 shadow-lg shadow-teal-500/25 transition hover:from-teal-400 hover:to-emerald-500 active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-50"
           >
             Help me start
           </button>
