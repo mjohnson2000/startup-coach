@@ -60,3 +60,9 @@ body {
 .animate-pulse-soft {
   animation: pulse-soft 1.4s ease-in-out infinite;
 }
+
+.blog-prose p {
+  font-size: 1rem;
+  line-height: 1.75;
+  color: #cbd5e1;
+}
