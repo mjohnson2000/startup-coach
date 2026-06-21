@@ -2,6 +2,7 @@ import crypto from 'node:crypto'
 import fs from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { getExcludedVisitorIds } from './analytics-exclusions'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const DATA_DIR = path.join(__dirname, '..', 'data')
@@ -37,6 +38,13 @@ export interface AnalyticsStats {
   eventsByType: Array<{ type: string; count: number }>
   viewsByDay: Array<{ date: string; count: number }>
   recentEvents: AnalyticsEvent[]
+  excludedDeviceCount: number
+  currentVisitorExcluded: boolean
+}
+
+function isInternalEvent(event: AnalyticsEvent, excludedVisitors: Set<string>): boolean {
+  if (event.path.startsWith('/admin')) return true
+  return excludedVisitors.has(event.visitorId)
 }
 
 function ensureDataDir(): void {
@@ -68,8 +76,11 @@ function readAllEvents(): AnalyticsEvent[] {
     .map((line) => JSON.parse(line) as AnalyticsEvent)
 }
 
-export function getAnalyticsStats(): AnalyticsStats {
-  const events = readAllEvents()
+export function getAnalyticsStats(currentVisitorId?: string): AnalyticsStats {
+  const events = readAllEvents().filter(
+    (event) => !isInternalEvent(event, getExcludedVisitorIds()),
+  )
+  const excludedDeviceCount = getExcludedVisitorIds().size
   const visitors = new Set<string>()
   const pathCounts = new Map<string, number>()
   const typeCounts = new Map<string, number>()
@@ -120,5 +131,9 @@ export function getAnalyticsStats(): AnalyticsStats {
     eventsByType,
     viewsByDay,
     recentEvents: [...events].reverse().slice(0, 40),
+    excludedDeviceCount,
+    currentVisitorExcluded: currentVisitorId
+      ? getExcludedVisitorIds().has(currentVisitorId)
+      : false,
   }
 }

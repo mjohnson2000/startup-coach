@@ -3,6 +3,10 @@ import { useCallback, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { AdminBlogPanel } from '../components/AdminBlogPanel'
 import { Seo } from '../components/Seo'
+import {
+  getVisitorId,
+  setAnalyticsExcludedLocally,
+} from '../lib/analytics'
 
 interface AnalyticsStats {
   totalEvents: number
@@ -22,6 +26,14 @@ interface AnalyticsStats {
     visitorId: string
     metadata?: Record<string, unknown>
   }>
+  excludedDeviceCount: number
+  currentVisitorExcluded: boolean
+}
+
+interface ExcludedVisitor {
+  visitorId: string
+  label: string
+  excludedAt: string
 }
 
 function formatTime(timestamp: number): string {
@@ -47,9 +59,15 @@ export function AdminPage() {
   const [stats, setStats] = useState<AnalyticsStats | null>(null)
   const [activeTab, setActiveTab] = useState<AdminTab>('analytics')
   const [openBlogEditor, setOpenBlogEditor] = useState(false)
+  const [exclusions, setExclusions] = useState<ExcludedVisitor[]>([])
+  const [isUpdatingExclusion, setIsUpdatingExclusion] = useState(false)
 
   const loadStats = useCallback(async () => {
-    const response = await fetch('/api/admin/stats', { credentials: 'include' })
+    const visitorId = getVisitorId()
+    const response = await fetch(
+      `/api/admin/stats?visitorId=${encodeURIComponent(visitorId)}`,
+      { credentials: 'include' },
+    )
     if (response.status === 401) {
       setIsAuthed(false)
       setStats(null)
@@ -64,11 +82,27 @@ export function AdminPage() {
     return true
   }, [])
 
+  const loadExclusions = useCallback(async () => {
+    const response = await fetch('/api/admin/exclusions', { credentials: 'include' })
+    if (!response.ok) return
+    const data = (await response.json()) as { exclusions: ExcludedVisitor[] }
+    setExclusions(data.exclusions)
+  }, [])
+
   useEffect(() => {
     loadStats()
+      .then((authed) => {
+        if (authed) return loadExclusions()
+      })
       .catch((err: Error) => setError(err.message))
       .finally(() => setIsLoading(false))
-  }, [loadStats])
+  }, [loadStats, loadExclusions])
+
+  useEffect(() => {
+    if (stats?.currentVisitorExcluded) {
+      setAnalyticsExcludedLocally(true)
+    }
+  }, [stats?.currentVisitorExcluded])
 
   async function handleLogin(event: FormEvent) {
     event.preventDefault()
@@ -80,7 +114,7 @@ export function AdminPage() {
         method: 'POST',
         credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ password }),
+        body: JSON.stringify({ password, visitorId: getVisitorId() }),
       })
 
       if (!response.ok) {
@@ -88,8 +122,10 @@ export function AdminPage() {
         throw new Error(data.error ?? 'Login failed')
       }
 
+      setAnalyticsExcludedLocally(true)
       setPassword('')
       await loadStats()
+      await loadExclusions()
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Login failed')
     } finally {
@@ -101,6 +137,63 @@ export function AdminPage() {
     await fetch('/api/admin/logout', { method: 'POST', credentials: 'include' })
     setIsAuthed(false)
     setStats(null)
+    setExclusions([])
+  }
+
+  async function handleExcludeDevice() {
+    setIsUpdatingExclusion(true)
+    setError(null)
+
+    try {
+      const visitorId = getVisitorId()
+      const response = await fetch('/api/admin/exclusions', {
+        method: 'POST',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ visitorId, label: 'Admin device' }),
+      })
+
+      if (!response.ok) {
+        const data = (await response.json()) as { error?: string }
+        throw new Error(data.error ?? 'Failed to exclude device')
+      }
+
+      setAnalyticsExcludedLocally(true)
+      await loadStats()
+      await loadExclusions()
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to exclude device')
+    } finally {
+      setIsUpdatingExclusion(false)
+    }
+  }
+
+  async function handleIncludeDevice(visitorId: string) {
+    setIsUpdatingExclusion(true)
+    setError(null)
+
+    try {
+      const response = await fetch(`/api/admin/exclusions/${encodeURIComponent(visitorId)}`, {
+        method: 'DELETE',
+        credentials: 'include',
+      })
+
+      if (!response.ok) {
+        const data = (await response.json()) as { error?: string }
+        throw new Error(data.error ?? 'Failed to include device')
+      }
+
+      if (visitorId === getVisitorId()) {
+        setAnalyticsExcludedLocally(false)
+      }
+
+      await loadStats()
+      await loadExclusions()
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to include device')
+    } finally {
+      setIsUpdatingExclusion(false)
+    }
   }
 
   if (isLoading && !stats) {
@@ -234,6 +327,59 @@ export function AdminPage() {
         />
       ) : (
         <>
+      <section className="mb-8 rounded-2xl border border-white/[0.06] bg-navy-850/80 p-5">
+        <div className="flex flex-wrap items-start justify-between gap-4">
+          <div>
+            <h2 className="text-sm font-semibold uppercase tracking-wider text-slate-400">
+              Your devices
+            </h2>
+            <p className="mt-2 text-sm text-slate-400">
+              Admin visits and your devices are excluded from the stats below.
+            </p>
+            <p className="mt-2 font-mono text-xs text-slate-500">
+              This device: {getVisitorId().slice(0, 8)}…
+              {stats.currentVisitorExcluded ? ' · excluded' : ' · counting in stats'}
+            </p>
+          </div>
+          {!stats.currentVisitorExcluded && (
+            <button
+              type="button"
+              disabled={isUpdatingExclusion}
+              onClick={() => void handleExcludeDevice()}
+              className="rounded-xl border border-white/[0.06] px-4 py-2 text-sm text-slate-300 transition hover:bg-white/[0.04] disabled:opacity-50"
+            >
+              Exclude this device
+            </button>
+          )}
+        </div>
+
+        {exclusions.length > 0 && (
+          <div className="mt-4 space-y-2 border-t border-white/[0.06] pt-4">
+            {exclusions.map((entry) => (
+              <div
+                key={entry.visitorId}
+                className="flex flex-wrap items-center justify-between gap-2 text-sm"
+              >
+                <div>
+                  <span className="font-mono text-xs text-slate-400">
+                    {entry.visitorId.slice(0, 8)}…
+                  </span>
+                  <span className="ml-2 text-slate-500">{entry.label}</span>
+                </div>
+                <button
+                  type="button"
+                  disabled={isUpdatingExclusion}
+                  onClick={() => void handleIncludeDevice(entry.visitorId)}
+                  className="text-xs text-slate-400 transition hover:text-slate-200 disabled:opacity-50"
+                >
+                  Include again
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+      </section>
+
       <div className="mb-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
         <StatCard label="Page views" value={stats.pageViews} />
         <StatCard label="Unique visitors" value={stats.uniqueVisitors} />

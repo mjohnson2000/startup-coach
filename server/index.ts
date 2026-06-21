@@ -11,6 +11,11 @@ import {
   setAdminCookie,
   verifyAdminPassword,
 } from './admin-auth'
+import {
+  excludeVisitor,
+  includeVisitor,
+  listExcludedVisitors,
+} from './analytics-exclusions'
 import { getAnalyticsStats, recordEvent, type AnalyticsEventType } from './analytics-store'
 import {
   createPost,
@@ -92,8 +97,13 @@ app.post('/api/admin/login', (req, res) => {
     return
   }
 
+  const visitorId = String(req.body?.visitorId ?? '').trim()
+  if (visitorId) {
+    excludeVisitor(visitorId, 'Admin login')
+  }
+
   setAdminCookie(res, token)
-  res.json({ ok: true })
+  res.json({ ok: true, visitorExcluded: Boolean(visitorId) })
 })
 
 app.post('/api/admin/logout', (req, res) => {
@@ -102,8 +112,34 @@ app.post('/api/admin/logout', (req, res) => {
   res.json({ ok: true })
 })
 
-app.get('/api/admin/stats', requireAdmin, (_req, res) => {
-  res.json(getAnalyticsStats())
+app.get('/api/admin/stats', requireAdmin, (req, res) => {
+  const visitorId = String(req.query.visitorId ?? '').trim()
+  res.json(getAnalyticsStats(visitorId || undefined))
+})
+
+app.get('/api/admin/exclusions', requireAdmin, (_req, res) => {
+  res.json({ exclusions: listExcludedVisitors() })
+})
+
+app.post('/api/admin/exclusions', requireAdmin, (req, res) => {
+  try {
+    const visitorId = String(req.body?.visitorId ?? '').trim()
+    const label = String(req.body?.label ?? 'Admin device').trim()
+    const entry = excludeVisitor(visitorId, label || 'Admin device')
+    res.json({ ok: true, exclusion: entry })
+  } catch (err) {
+    res.status(400).json({ error: err instanceof Error ? err.message : 'Failed to exclude device' })
+  }
+})
+
+app.delete('/api/admin/exclusions/:visitorId', requireAdmin, (req, res) => {
+  try {
+    includeVisitor(String(req.params.visitorId))
+    res.json({ ok: true })
+  } catch (err) {
+    const message = err instanceof Error ? err.message : 'Failed to include device'
+    res.status(message === 'Visitor not found in exclusions' ? 404 : 400).json({ error: message })
+  }
 })
 
 app.get('/api/blog/posts', (_req, res) => {
