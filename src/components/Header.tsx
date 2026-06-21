@@ -12,7 +12,7 @@ export function Header({ isMockMode }: HeaderProps) {
   const onAdmin = pathname.startsWith('/admin')
 
   return (
-    <header className="border-b border-white/[0.05] bg-navy-950/60 px-4 py-4 backdrop-blur-md sm:px-6">
+    <header className="relative z-40 border-b border-white/[0.05] bg-navy-950/60 px-4 py-4 backdrop-blur-md sm:px-6">
       <div className="mx-auto flex max-w-3xl items-center justify-between gap-3">
         <Link to="/" className="flex min-w-0 items-center gap-3 transition hover:opacity-90">
           <StarterAvatar size="md" />

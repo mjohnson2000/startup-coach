@@ -25,14 +25,16 @@ export function FeedbackDialog() {
       >
         Close
       </button>
-      <div className="absolute right-0 top-full z-20 mt-2 w-72 sm:w-80">
-        <FeedbackForm
-          context="general"
-          compact
-          onSubmitted={() => {
-            window.setTimeout(() => setIsOpen(false), 1500)
-          }}
-        />
+      <div className="absolute right-0 top-full z-50 mt-2 w-72 sm:w-80">
+        <div className="rounded-xl shadow-2xl shadow-black/40">
+          <FeedbackForm
+            context="general"
+            compact
+            onSubmitted={() => {
+              window.setTimeout(() => setIsOpen(false), 1500)
+            }}
+          />
+        </div>
       </div>
     </div>
   )
