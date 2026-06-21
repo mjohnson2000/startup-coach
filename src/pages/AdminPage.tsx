@@ -46,6 +46,7 @@ export function AdminPage() {
   const [error, setError] = useState<string | null>(null)
   const [stats, setStats] = useState<AnalyticsStats | null>(null)
   const [activeTab, setActiveTab] = useState<AdminTab>('analytics')
+  const [openBlogEditor, setOpenBlogEditor] = useState(false)
 
   const loadStats = useCallback(async () => {
     const response = await fetch('/api/admin/stats', { credentials: 'include' })
@@ -167,6 +168,16 @@ export function AdminPage() {
           <p className="mt-2 text-sm text-slate-400">Analytics and blog management.</p>
         </div>
         <div className="flex gap-2">
+          <button
+            type="button"
+            onClick={() => {
+              setActiveTab('blog')
+              setOpenBlogEditor(true)
+            }}
+            className="rounded-xl bg-gradient-to-r from-teal-500 to-emerald-600 px-4 py-2 text-sm font-semibold text-navy-950 transition hover:from-teal-400 hover:to-emerald-500"
+          >
+            Write blog post
+          </button>
           {activeTab === 'analytics' && (
             <button
               type="button"
@@ -200,7 +211,10 @@ export function AdminPage() {
         </button>
         <button
           type="button"
-          onClick={() => setActiveTab('blog')}
+          onClick={() => {
+            setActiveTab('blog')
+            setOpenBlogEditor(false)
+          }}
           className={`border-b-2 px-4 py-2 text-sm font-medium transition ${
             activeTab === 'blog'
               ? 'border-teal-400 text-teal-300'
@@ -214,7 +228,10 @@ export function AdminPage() {
       {error && <p className="mb-4 text-sm text-red-400">{error}</p>}
 
       {activeTab === 'blog' ? (
-        <AdminBlogPanel />
+        <AdminBlogPanel
+          key={openBlogEditor ? 'create' : 'list'}
+          startInCreateMode={openBlogEditor}
+        />
       ) : (
         <>
       <div className="mb-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">

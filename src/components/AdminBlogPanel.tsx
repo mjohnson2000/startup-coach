@@ -28,12 +28,12 @@ function StatusBadge({ status }: { status: BlogPost['status'] }) {
   )
 }
 
-export function AdminBlogPanel() {
+export function AdminBlogPanel({ startInCreateMode = false }: { startInCreateMode?: boolean }) {
   const [posts, setPosts] = useState<BlogPost[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [isSaving, setIsSaving] = useState(false)
-  const [editingId, setEditingId] = useState<string | null>(null)
+  const [editingId, setEditingId] = useState<string | null>(startInCreateMode ? 'new' : null)
   const [form, setForm] = useState<BlogPostInput>(emptyPostInput())
   const [slugTouched, setSlugTouched] = useState(false)
 
