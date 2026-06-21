@@ -2,6 +2,7 @@ import type { FormEvent } from 'react'
 import { useCallback, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { AdminBlogPanel } from '../components/AdminBlogPanel'
+import { AdminFeedbackPanel } from '../components/AdminFeedbackPanel'
 import { Seo } from '../components/Seo'
 import {
   getVisitorId,
@@ -49,7 +50,7 @@ function StatCard({ label, value }: { label: string; value: number }) {
   )
 }
 
-type AdminTab = 'analytics' | 'blog'
+type AdminTab = 'analytics' | 'blog' | 'feedback'
 
 export function AdminPage() {
   const [password, setPassword] = useState('')
@@ -321,6 +322,17 @@ export function AdminPage() {
         >
           Blog
         </button>
+        <button
+          type="button"
+          onClick={() => setActiveTab('feedback')}
+          className={`border-b-2 px-4 py-2 text-sm font-medium transition ${
+            activeTab === 'feedback'
+              ? 'border-teal-400 text-teal-300'
+              : 'border-transparent text-slate-400 hover:text-slate-200'
+          }`}
+        >
+          Feedback
+        </button>
       </div>
 
       {error && <p className="mb-4 text-sm text-red-400">{error}</p>}
@@ -330,6 +342,8 @@ export function AdminPage() {
           key={openBlogEditor ? 'create' : 'list'}
           startInCreateMode={openBlogEditor}
         />
+      ) : activeTab === 'feedback' ? (
+        <AdminFeedbackPanel />
       ) : (
         <>
       <section className="mb-8 rounded-2xl border border-white/[0.06] bg-navy-850/80 p-5">

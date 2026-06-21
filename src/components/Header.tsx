@@ -1,4 +1,5 @@
 import { Link, useLocation } from 'react-router-dom'
+import { FeedbackDialog } from './FeedbackDialog'
 import { STARTER_NAME, STARTER_TAGLINE, StarterAvatar } from './StarterAvatar'
 
 interface HeaderProps {
@@ -8,6 +9,7 @@ interface HeaderProps {
 export function Header({ isMockMode }: HeaderProps) {
   const { pathname } = useLocation()
   const onBlog = pathname.startsWith('/blog')
+  const onAdmin = pathname.startsWith('/admin')
 
   return (
     <header className="border-b border-white/[0.05] bg-navy-950/60 px-4 py-4 backdrop-blur-md sm:px-6">
@@ -28,6 +30,7 @@ export function Header({ isMockMode }: HeaderProps) {
               Demo mode
             </span>
           )}
+          {!onAdmin && <FeedbackDialog />}
           <Link
             to="/blog"
             className={`rounded-full px-3 py-1.5 text-xs font-medium transition sm:text-sm ${

@@ -26,6 +26,7 @@ import {
   updatePost,
 } from './blog-store'
 import { handleChat } from './chat-handler'
+import { getFeedbackSummary, listFeedback, recordFeedback } from './feedback-store'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const app = express()
@@ -244,6 +245,50 @@ app.post('/api/chat', async (req, res) => {
   } catch {
     res.status(500).json({ error: 'Failed to get coach response' })
   }
+})
+
+app.post('/api/feedback', (req, res) => {
+  try {
+    const rating = req.body?.rating
+    const visitorId = String(req.body?.visitorId ?? '').trim()
+    const pathValue = String(req.body?.path ?? '/').trim()
+    const context = req.body?.context
+
+    if (rating !== 'up' && rating !== 'down') {
+      res.status(400).json({ error: 'Invalid rating' })
+      return
+    }
+
+    if (!visitorId) {
+      res.status(400).json({ error: 'Missing visitorId' })
+      return
+    }
+
+    if (context !== 'chat' && context !== 'general') {
+      res.status(400).json({ error: 'Invalid context' })
+      return
+    }
+
+    const entry = recordFeedback({
+      rating,
+      comment: String(req.body?.comment ?? ''),
+      context,
+      visitorId,
+      path: pathValue,
+      todaysAction: String(req.body?.todaysAction ?? ''),
+    })
+
+    res.status(201).json({ ok: true, id: entry?.id ?? null })
+  } catch {
+    res.status(500).json({ error: 'Failed to save feedback' })
+  }
+})
+
+app.get('/api/admin/feedback', requireAdmin, (_req, res) => {
+  res.json({
+    summary: getFeedbackSummary(),
+    entries: listFeedback(),
+  })
 })
 
 app.use(express.static(distPath))

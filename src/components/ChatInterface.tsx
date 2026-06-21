@@ -3,6 +3,7 @@ import { sendChatMessage } from '../lib/api'
 import { trackEvent } from '../lib/analytics'
 import { saveSession } from '../lib/session-storage'
 import type { ChatMessage, FollowUpContext, IntakeData } from '../types/chat'
+import { FeedbackForm } from './FeedbackForm'
 import { MessageBubble } from './MessageBubble'
 import { STARTER_NAME, StarterAvatar } from './StarterAvatar'
 import { TodaysAction } from './TodaysAction'
@@ -73,6 +74,7 @@ export function ChatInterface({
   const [error, setError] = useState<string | null>(null)
   const [todaysAction, setTodaysAction] = useState<string | null>(null)
   const [hasStarted, setHasStarted] = useState(false)
+  const [showFeedback, setShowFeedback] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLTextAreaElement>(null)
 
@@ -83,6 +85,7 @@ export function ChatInterface({
   useEffect(() => {
     if (todaysAction) {
       saveSession(intake, todaysAction)
+      setShowFeedback(true)
     }
   }, [intake, todaysAction])
 
@@ -192,6 +195,10 @@ export function ChatInterface({
       </div>
 
       {todaysAction && <TodaysAction action={todaysAction} />}
+
+      {showFeedback && (
+        <FeedbackForm context="chat" todaysAction={todaysAction ?? undefined} />
+      )}
 
       <div className="flex-1 overflow-y-auto px-4 py-4 sm:px-6">
         <div className="mx-auto flex max-w-3xl flex-col gap-5">
