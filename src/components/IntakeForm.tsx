@@ -32,15 +32,15 @@ export function IntakeForm({ onSubmit }: IntakeFormProps) {
           <StarterAvatar size="lg" className="mt-0.5" />
           <div>
             <p className="mb-1 text-sm font-medium uppercase tracking-wider text-teal-400">
-              Too many business ideas?
+              Recent grad, lots of ideas?
             </p>
             <h2 className="mb-2 text-2xl font-bold text-slate-50">
               Pick one and start
             </h2>
             <p className="text-sm leading-relaxed text-slate-400">
-              You have ideas but haven&apos;t started yet. Tell {STARTER_NAME} what you&apos;re
-              considering and what&apos;s holding you back — get one clear first step toward
-              actually starting.
+              Pre-grad or between jobs, good with AI and online tools, but sitting on a pile of
+              business ideas? Tell {STARTER_NAME} what you&apos;re weighing — get one clear first
+              step toward actually starting, not more research.
             </p>
           </div>
         </div>
@@ -53,7 +53,7 @@ export function IntakeForm({ onSubmit }: IntakeFormProps) {
             <input
               name="businessIdea"
               required
-              placeholder="e.g. Meal prep delivery, AI writing service, Etsy shop — list a few if you're torn"
+              placeholder="e.g. AI freelance, a simple app, Etsy shop — list a few if you're torn"
               className="w-full rounded-xl border border-teal-500/10 bg-navy-950/60 px-4 py-3 text-sm text-slate-50 placeholder:text-slate-500 outline-none transition focus:border-teal-500/50 focus:ring-2 focus:ring-teal-500/20"
             />
           </label>
@@ -66,7 +66,7 @@ export function IntakeForm({ onSubmit }: IntakeFormProps) {
               name="blocker"
               required
               rows={3}
-              placeholder="e.g. I have 5 ideas and can't choose — I keep researching but never launch anything"
+              placeholder="e.g. I have 5 ideas and can't choose — I use AI and watch tutorials but never launch"
               className="w-full resize-none rounded-xl border border-teal-500/10 bg-navy-950/60 px-4 py-3 text-sm text-slate-50 placeholder:text-slate-500 outline-none transition focus:border-teal-500/50 focus:ring-2 focus:ring-teal-500/20"
             />
           </label>

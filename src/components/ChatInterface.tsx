@@ -13,8 +13,8 @@ interface ChatInterfaceProps {
 
 const SUGGESTED_REPLIES = [
   "I have too many ideas and can't pick one",
-  'I know what I want but keep putting it off',
-  "I don't know how to actually start",
+  'I keep learning but never start',
+  "I'm good with AI but don't know what to sell",
 ]
 
 const MIN_TYPING_MS = 450
@@ -55,7 +55,7 @@ export function ChatInterface({ intake, onReset, onMockModeChange }: ChatInterfa
       setError(null)
 
       try {
-        const kickoff = `I want to start a business but I'm stuck. Ideas I'm considering: "${intake.businessIdea}". What's keeping me stuck: ${intake.blocker}. I want to start ${intake.timeline.toLowerCase()}.`
+        const kickoff = `I'm a recent grad (or between jobs) and want to start a business but I'm stuck. I have a lot of ideas — top ones: "${intake.businessIdea}". What's keeping me stuck: ${intake.blocker}. I want to start ${intake.timeline.toLowerCase()}. I'm comfortable with AI and online tools.`
         const userMessage = createMessage('user', kickoff)
 
         const [response] = await Promise.all([
