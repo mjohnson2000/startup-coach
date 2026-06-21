@@ -32,13 +32,13 @@ export function IntakeForm({ onSubmit }: IntakeFormProps) {
           <StarterAvatar size="lg" className="mt-0.5" />
           <div>
             <p className="mb-1 text-sm font-medium uppercase tracking-wider text-teal-400">
-              Recent grad, lots of ideas?
+              Young, lots of ideas?
             </p>
             <h2 className="mb-2 text-2xl font-bold text-slate-50">
               Pick one and start
             </h2>
             <p className="text-sm leading-relaxed text-slate-400">
-              Pre-grad or between jobs, good with AI and online tools, but sitting on a pile of
+              Starting out or between jobs, good with AI and online tools, but sitting on a pile of
               business ideas? Tell {STARTER_NAME} what you&apos;re weighing — get one clear first
               step toward actually starting, not more research.
             </p>
