@@ -38,9 +38,8 @@ export function IntakeForm({ onSubmit }: IntakeFormProps) {
               Pick one and start
             </h2>
             <p className="text-sm leading-relaxed text-slate-400">
-              Young and starting, full of business ideas but stuck choosing? Online or
-              local — tell {STARTER_NAME} what you&apos;re weighing and get one clear first step,
-              not more research.
+              Full of business ideas but stuck choosing? Online or local — tell {STARTER_NAME}{' '}
+              what you&apos;re weighing and get one clear first step, not more research.
             </p>
           </div>
         </div>
