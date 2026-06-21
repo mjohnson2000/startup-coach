@@ -14,11 +14,12 @@
     "node": ">=20"
   },
   "dependencies": {
+    "dotenv": "^16.6.1",
     "express": "^4.21.2",
     "openai": "^6.44.0",
-    "tsx": "^4.20.3",
     "react": "^19.2.6",
-    "react-dom": "^19.2.6"
+    "react-dom": "^19.2.6",
+    "tsx": "^4.20.3"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

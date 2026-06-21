@@ -1,3 +1,4 @@
+import 'dotenv/config'
 import express from 'express'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -6,6 +7,7 @@ import { handleChat } from './chat-handler'
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const app = express()
 const port = Number(process.env.PORT) || 3000
+const host = process.env.HOST ?? '0.0.0.0'
 const distPath = path.join(__dirname, '..', 'dist')
 
 app.disable('x-powered-by')
@@ -32,6 +34,6 @@ app.get('*', (_req, res) => {
   res.sendFile(path.join(distPath, 'index.html'))
 })
 
-app.listen(port, () => {
-  console.log(`Startup Coach running on port ${port}`)
+app.listen(port, host, () => {
+  console.log(`Startup Coach running on http://${host}:${port}`)
 })
