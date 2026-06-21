@@ -61,8 +61,69 @@ body {
   animation: pulse-soft 1.4s ease-in-out infinite;
 }
 
-.blog-prose p {
+.blog-prose {
+  color: #cbd5e1;
+}
+
+.blog-prose p,
+.blog-prose li {
   font-size: 1rem;
   line-height: 1.75;
   color: #cbd5e1;
+}
+
+.blog-prose p + p {
+  margin-top: 1rem;
+}
+
+.blog-prose h2,
+.blog-prose h3 {
+  margin-top: 1.75rem;
+  margin-bottom: 0.75rem;
+  font-weight: 600;
+  color: #f1f5f9;
+}
+
+.blog-prose h2 {
+  font-size: 1.35rem;
+}
+
+.blog-prose h3 {
+  font-size: 1.15rem;
+}
+
+.blog-prose ul,
+.blog-prose ol {
+  margin: 1rem 0;
+  padding-left: 1.5rem;
+}
+
+.blog-prose ul {
+  list-style: disc;
+}
+
+.blog-prose ol {
+  list-style: decimal;
+}
+
+.blog-prose li + li {
+  margin-top: 0.35rem;
+}
+
+.blog-prose a {
+  color: #2dd4bf;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.blog-prose strong {
+  color: #f1f5f9;
+  font-weight: 600;
+}
+
+.blog-prose blockquote {
+  margin: 1.25rem 0;
+  border-left: 3px solid rgba(45, 212, 191, 0.4);
+  padding-left: 1rem;
+  color: #94a3b8;
 }

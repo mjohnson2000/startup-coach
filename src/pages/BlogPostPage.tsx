@@ -1,7 +1,10 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { Link, Navigate, useParams } from 'react-router-dom'
-import { getBlogPost } from '../data/blog-posts'
+import Markdown from 'react-markdown'
+import { Seo } from '../components/Seo'
+import { fetchPublishedPost } from '../lib/blog-api'
 import { trackEvent } from '../lib/analytics'
+import type { BlogPost } from '../types/blog'
 
 function formatDate(iso: string): string {
   return new Date(iso).toLocaleDateString('en-US', {
@@ -13,18 +16,51 @@ function formatDate(iso: string): string {
 
 export function BlogPostPage() {
   const { slug } = useParams<{ slug: string }>()
-  const post = slug ? getBlogPost(slug) : undefined
+  const [post, setPost] = useState<BlogPost | null | undefined>(undefined)
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    if (post) void trackEvent('blog_post_view', { slug: post.slug })
-  }, [post])
+    if (!slug) {
+      setPost(null)
+      return
+    }
+
+    fetchPublishedPost(slug)
+      .then((result) => {
+        setPost(result)
+        if (result) void trackEvent('blog_post_view', { slug: result.slug })
+      })
+      .catch((err: Error) => setError(err.message))
+  }, [slug])
+
+  if (post === undefined && !error) {
+    return (
+      <main className="mx-auto w-full max-w-3xl flex-1 px-4 py-12 sm:px-6">
+        <p className="text-center text-sm text-slate-500">Loading article…</p>
+      </main>
+    )
+  }
 
   if (!post) {
     return <Navigate to="/blog" replace />
   }
 
+  const seoTitle = post.seo?.metaTitle || post.title
+  const seoDescription = post.seo?.metaDescription || post.excerpt
+
   return (
     <main className="mx-auto w-full max-w-3xl flex-1 px-4 py-8 sm:px-6 sm:py-12">
+      <Seo
+        title={seoTitle}
+        description={seoDescription}
+        path={`/blog/${post.slug}`}
+        type="article"
+        publishedAt={post.publishedAt}
+        updatedAt={post.updatedAt}
+        image={post.seo?.ogImage}
+        keywords={post.seo?.keywords}
+      />
+
       <Link
         to="/blog"
         className="mb-6 inline-flex text-sm text-slate-500 transition hover:text-slate-300"
@@ -43,10 +79,8 @@ export function BlogPostPage() {
           {post.title}
         </h1>
 
-        <div className="blog-prose space-y-4">
-          {post.paragraphs.map((paragraph) => (
-            <p key={paragraph.slice(0, 40)}>{paragraph}</p>
-          ))}
+        <div className="blog-prose">
+          <Markdown>{post.content}</Markdown>
         </div>
       </article>
 

@@ -1,5 +1,8 @@
+import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { BLOG_POSTS } from '../data/blog-posts'
+import { Seo } from '../components/Seo'
+import { fetchPublishedPosts } from '../lib/blog-api'
+import type { BlogPost } from '../types/blog'
 
 function formatDate(iso: string): string {
   return new Date(iso).toLocaleDateString('en-US', {
@@ -10,8 +13,25 @@ function formatDate(iso: string): string {
 }
 
 export function BlogPage() {
+  const [posts, setPosts] = useState<BlogPost[]>([])
+  const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+
+  useEffect(() => {
+    fetchPublishedPosts()
+      .then(setPosts)
+      .catch((err: Error) => setError(err.message))
+      .finally(() => setIsLoading(false))
+  }, [])
+
   return (
     <main className="mx-auto w-full max-w-3xl flex-1 px-4 py-8 sm:px-6 sm:py-12">
+      <Seo
+        title="Blog — Ideas, starting, and getting unstuck"
+        description="Short reads for young entrepreneurs with lots of ideas — how to pick one, stop researching, and take a real first step."
+        path="/blog"
+      />
+
       <div className="mb-8">
         <p className="mb-1 text-sm font-medium uppercase tracking-wider text-slate-400">Blog</p>
         <h1 className="mb-3 text-3xl font-bold text-slate-50">Ideas, starting, and getting unstuck</h1>
@@ -21,8 +41,11 @@ export function BlogPage() {
         </p>
       </div>
 
+      {isLoading && <p className="text-sm text-slate-500">Loading articles…</p>}
+      {error && <p className="text-sm text-red-400">{error}</p>}
+
       <div className="space-y-4">
-        {BLOG_POSTS.map((post) => (
+        {posts.map((post) => (
           <article
             key={post.slug}
             className="rounded-2xl border border-white/[0.06] bg-navy-850/80 p-5 transition hover:border-teal-500/20 sm:p-6"
@@ -47,6 +70,10 @@ export function BlogPage() {
           </article>
         ))}
       </div>
+
+      {!isLoading && posts.length === 0 && !error && (
+        <p className="text-sm text-slate-500">No articles published yet. Check back soon.</p>
+      )}
 
       <div className="mt-10 rounded-2xl border border-amber-500/20 bg-amber-950/25 p-6 text-center">
         <p className="mb-1 text-[10px] font-bold uppercase tracking-wider text-amber-400/90">

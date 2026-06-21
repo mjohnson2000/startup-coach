@@ -1,6 +1,8 @@
 import type { FormEvent } from 'react'
 import { useCallback, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { AdminBlogPanel } from '../components/AdminBlogPanel'
+import { Seo } from '../components/Seo'
 
 interface AnalyticsStats {
   totalEvents: number
@@ -35,12 +37,15 @@ function StatCard({ label, value }: { label: string; value: number }) {
   )
 }
 
+type AdminTab = 'analytics' | 'blog'
+
 export function AdminPage() {
   const [password, setPassword] = useState('')
   const [isAuthed, setIsAuthed] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [stats, setStats] = useState<AnalyticsStats | null>(null)
+  const [activeTab, setActiveTab] = useState<AdminTab>('analytics')
 
   const loadStats = useCallback(async () => {
     const response = await fetch('/api/admin/stats', { credentials: 'include' })
@@ -108,12 +113,13 @@ export function AdminPage() {
   if (!isAuthed) {
     return (
       <main className="mx-auto w-full max-w-md flex-1 px-4 py-12 sm:px-6">
+        <Seo title="Admin" description="Starter admin dashboard" path="/admin" noIndex />
         <div className="rounded-2xl border border-white/[0.06] bg-navy-850/80 p-6 sm:p-8">
           <p className="mb-1 text-sm font-medium uppercase tracking-wider text-slate-400">
             Admin
           </p>
-          <h1 className="mb-2 text-2xl font-bold text-slate-50">Starter analytics</h1>
-          <p className="mb-6 text-sm text-slate-400">Sign in to view site visits and user paths.</p>
+          <h1 className="mb-2 text-2xl font-bold text-slate-50">Starter dashboard</h1>
+          <p className="mb-6 text-sm text-slate-400">Sign in to manage analytics and blog posts.</p>
 
           <form onSubmit={handleLogin} className="space-y-4">
             <label className="block">
@@ -150,22 +156,26 @@ export function AdminPage() {
 
   return (
     <main className="mx-auto w-full max-w-5xl flex-1 px-4 py-8 sm:px-6 sm:py-10">
+      <Seo title="Admin" description="Starter admin dashboard" path="/admin" noIndex />
+
       <div className="mb-8 flex flex-wrap items-start justify-between gap-4">
         <div>
           <p className="mb-1 text-sm font-medium uppercase tracking-wider text-slate-400">
             Admin
           </p>
-          <h1 className="text-3xl font-bold text-slate-50">Analytics</h1>
-          <p className="mt-2 text-sm text-slate-400">Site visits, paths, and key user actions.</p>
+          <h1 className="text-3xl font-bold text-slate-50">Dashboard</h1>
+          <p className="mt-2 text-sm text-slate-400">Analytics and blog management.</p>
         </div>
         <div className="flex gap-2">
-          <button
-            type="button"
-            onClick={() => void loadStats().catch((err: Error) => setError(err.message))}
-            className="rounded-xl border border-white/[0.06] px-4 py-2 text-sm text-slate-300 transition hover:bg-white/[0.04]"
-          >
-            Refresh
-          </button>
+          {activeTab === 'analytics' && (
+            <button
+              type="button"
+              onClick={() => void loadStats().catch((err: Error) => setError(err.message))}
+              className="rounded-xl border border-white/[0.06] px-4 py-2 text-sm text-slate-300 transition hover:bg-white/[0.04]"
+            >
+              Refresh
+            </button>
+          )}
           <button
             type="button"
             onClick={() => void handleLogout()}
@@ -176,8 +186,37 @@ export function AdminPage() {
         </div>
       </div>
 
+      <div className="mb-8 flex gap-2 border-b border-white/[0.06]">
+        <button
+          type="button"
+          onClick={() => setActiveTab('analytics')}
+          className={`border-b-2 px-4 py-2 text-sm font-medium transition ${
+            activeTab === 'analytics'
+              ? 'border-teal-400 text-teal-300'
+              : 'border-transparent text-slate-400 hover:text-slate-200'
+          }`}
+        >
+          Analytics
+        </button>
+        <button
+          type="button"
+          onClick={() => setActiveTab('blog')}
+          className={`border-b-2 px-4 py-2 text-sm font-medium transition ${
+            activeTab === 'blog'
+              ? 'border-teal-400 text-teal-300'
+              : 'border-transparent text-slate-400 hover:text-slate-200'
+          }`}
+        >
+          Blog
+        </button>
+      </div>
+
       {error && <p className="mb-4 text-sm text-red-400">{error}</p>}
 
+      {activeTab === 'blog' ? (
+        <AdminBlogPanel />
+      ) : (
+        <>
       <div className="mb-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
         <StatCard label="Page views" value={stats.pageViews} />
         <StatCard label="Unique visitors" value={stats.uniqueVisitors} />
@@ -273,6 +312,8 @@ export function AdminPage() {
           </table>
         </div>
       </section>
+        </>
+      )}
     </main>
   )
 }

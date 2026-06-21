@@ -1,4 +1,6 @@
-export interface BlogPost {
+import type { BlogPostInput } from '../src/types/blog'
+
+interface SeedPost {
   slug: string
   title: string
   excerpt: string
@@ -7,7 +9,7 @@ export interface BlogPost {
   paragraphs: string[]
 }
 
-export const BLOG_POSTS: BlogPost[] = [
+const LEGACY_POSTS: SeedPost[] = [
   {
     slug: 'too-many-business-ideas',
     title: 'Too Many Business Ideas? How to Pick One and Start',
@@ -73,6 +75,15 @@ export const BLOG_POSTS: BlogPost[] = [
   },
 ]
 
-export function getBlogPost(slug: string): BlogPost | undefined {
-  return BLOG_POSTS.find((post) => post.slug === slug)
-}
+export const SEED_BLOG_POSTS: BlogPostInput[] = LEGACY_POSTS.map((post) => ({
+  slug: post.slug,
+  title: post.title,
+  excerpt: post.excerpt,
+  content: post.paragraphs.join('\n\n'),
+  status: 'published' as const,
+  publishedAt: post.publishedAt,
+  seo: {
+    metaTitle: `${post.title} | Starter`,
+    metaDescription: post.excerpt,
+  },
+}))

@@ -12,6 +12,14 @@ import {
   verifyAdminPassword,
 } from './admin-auth'
 import { getAnalyticsStats, recordEvent, type AnalyticsEventType } from './analytics-store'
+import {
+  createPost,
+  deletePost,
+  getPublishedPost,
+  listAllPosts,
+  listPublishedPosts,
+  updatePost,
+} from './blog-store'
 import { handleChat } from './chat-handler'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
@@ -96,6 +104,95 @@ app.post('/api/admin/logout', (req, res) => {
 
 app.get('/api/admin/stats', requireAdmin, (_req, res) => {
   res.json(getAnalyticsStats())
+})
+
+app.get('/api/blog/posts', (_req, res) => {
+  res.json(listPublishedPosts())
+})
+
+app.get('/api/blog/posts/:slug', (req, res) => {
+  const post = getPublishedPost(String(req.params.slug))
+  if (!post) {
+    res.status(404).json({ error: 'Post not found' })
+    return
+  }
+  res.json(post)
+})
+
+app.get('/sitemap.xml', (_req, res) => {
+  const posts = listPublishedPosts()
+  const urls: Array<{
+    loc: string
+    changefreq: string
+    priority: string
+    lastmod?: string
+  }> = [
+    { loc: 'https://bizstarteragent.com/', changefreq: 'weekly', priority: '1.0' },
+    { loc: 'https://bizstarteragent.com/blog', changefreq: 'weekly', priority: '0.8' },
+    ...posts.map((post) => ({
+      loc: `https://bizstarteragent.com/blog/${post.slug}`,
+      changefreq: 'monthly',
+      priority: '0.7',
+      lastmod: post.updatedAt,
+    })),
+  ]
+
+  const xml = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+${urls
+  .map(
+    (url) => `  <url>
+    <loc>${url.loc}</loc>${url.lastmod ? `\n    <lastmod>${url.lastmod}</lastmod>` : ''}
+    <changefreq>${url.changefreq}</changefreq>
+    <priority>${url.priority}</priority>
+  </url>`,
+  )
+  .join('\n')}
+</urlset>`
+
+  res.type('application/xml').send(xml)
+})
+
+app.get('/robots.txt', (_req, res) => {
+  res.type('text/plain').send(`User-agent: *
+Allow: /
+Disallow: /admin
+
+Sitemap: https://bizstarteragent.com/sitemap.xml
+`)
+})
+
+app.get('/api/admin/blog/posts', requireAdmin, (_req, res) => {
+  res.json(listAllPosts())
+})
+
+app.post('/api/admin/blog/posts', requireAdmin, (req, res) => {
+  try {
+    const post = createPost(req.body)
+    res.status(201).json(post)
+  } catch (err) {
+    res.status(400).json({ error: err instanceof Error ? err.message : 'Failed to create post' })
+  }
+})
+
+app.put('/api/admin/blog/posts/:id', requireAdmin, (req, res) => {
+  try {
+    const post = updatePost(String(req.params.id), req.body)
+    res.json(post)
+  } catch (err) {
+    const message = err instanceof Error ? err.message : 'Failed to update post'
+    res.status(message === 'Post not found' ? 404 : 400).json({ error: message })
+  }
+})
+
+app.delete('/api/admin/blog/posts/:id', requireAdmin, (req, res) => {
+  try {
+    deletePost(String(req.params.id))
+    res.json({ ok: true })
+  } catch (err) {
+    const message = err instanceof Error ? err.message : 'Failed to delete post'
+    res.status(message === 'Post not found' ? 404 : 400).json({ error: message })
+  }
 })
 
 app.post('/api/chat', async (req, res) => {

@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { HelmetProvider } from 'react-helmet-async'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { AnalyticsTracker } from './components/AnalyticsTracker'
 import { PageShell } from './components/PageShell'
@@ -11,16 +12,18 @@ export default function App() {
   const [isMockMode, setIsMockMode] = useState(false)
 
   return (
-    <BrowserRouter>
-      <AnalyticsTracker />
-      <PageShell isMockMode={isMockMode}>
-        <Routes>
-          <Route path="/" element={<HomePage onMockModeChange={setIsMockMode} />} />
-          <Route path="/blog" element={<BlogPage />} />
-          <Route path="/blog/:slug" element={<BlogPostPage />} />
-          <Route path="/admin" element={<AdminPage />} />
-        </Routes>
-      </PageShell>
-    </BrowserRouter>
+    <HelmetProvider>
+      <BrowserRouter>
+        <AnalyticsTracker />
+        <PageShell isMockMode={isMockMode}>
+          <Routes>
+            <Route path="/" element={<HomePage onMockModeChange={setIsMockMode} />} />
+            <Route path="/blog" element={<BlogPage />} />
+            <Route path="/blog/:slug" element={<BlogPostPage />} />
+            <Route path="/admin" element={<AdminPage />} />
+          </Routes>
+        </PageShell>
+      </BrowserRouter>
+    </HelmetProvider>
   )
 }
