@@ -6,17 +6,24 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "start": "tsx server/index.ts",
     "lint": "eslint .",
     "preview": "vite preview"
   },
+  "engines": {
+    "node": ">=20"
+  },
   "dependencies": {
+    "express": "^4.21.2",
     "openai": "^6.44.0",
+    "tsx": "^4.20.3",
     "react": "^19.2.6",
     "react-dom": "^19.2.6"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "@tailwindcss/vite": "^4.3.1",
+    "@types/express": "^5.0.3",
     "@types/node": "^24.12.3",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
